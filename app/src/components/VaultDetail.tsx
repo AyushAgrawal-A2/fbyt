@@ -1,17 +1,24 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import useSWR from 'swr';
-import { type Address } from '@solana/kit';
+import { AccountRole, type Address, type AccountMeta, type Instruction } from '@solana/kit';
 import { useAction } from '@solana/react';
 import { useConnectedWallet } from '@solana/kit-plugin-wallet/react';
-import { fetchMint } from '@solana-program/token';
+import {
+  fetchMint,
+  getCreateAssociatedTokenIdempotentInstructionAsync,
+} from '@solana-program/token';
 import {
   fetchMaybeVaultPool,
   fetchMaybeInvestorPool,
+  fetchMaybeAdminPool,
+  findAdminPoolPda,
   getCreateInvestorPoolInstructionAsync,
   getDepositTokenFundInstructionAsync,
+  getWithdrawTokenFundInstructionAsync,
 } from '@/generated';
+import { FBYT_PROGRAM_ID, TOKEN_2022_PROGRAM_ID } from '@/lib/config';
 import { client } from '@/app/providers';
 import {
   ata,
@@ -101,6 +108,54 @@ export function VaultDetail({ address }: { address: string }) {
     return res.context.signature;
   });
 
+  const redeem = useAction(async (signal: AbortSignal) => {
+    if (!vault?.exists || !connected?.signer || !investor) throw new Error('Connect a wallet');
+    if (!position?.exists || position.data.shares <= 0n) throw new Error('No shares to redeem');
+    const dd = vault.data;
+    const signer = connected.signer;
+    const shares = position.data.shares;
+
+    const [adminPoolAddr] = await findAdminPoolPda({ programAddress: FBYT_PROGRAM_ID });
+    const adminPool = await fetchMaybeAdminPool(client.rpc, adminPoolAddr);
+    if (!adminPool.exists) throw new Error('Admin pool missing');
+    const oraclePool = await oraclePoolAddress(dd.adminPool, dd.tokenMint);
+    const oracle = await fetchMaybeOraclePool(client.rpc, oraclePool);
+    if (!oracle.exists) throw new Error('No oracle');
+    const priceUpdate = await canonicalPriceAccount(feedId32(oracle.data.feedId));
+    const investorPool = await investorPoolAddress(investor, dd.adminPool, vaultAddr, dd.tokenMint);
+    const vaultAta = await ata(vaultAddr, dd.tokenMint);
+    const investorAta = await ata(investor, dd.tokenMint);
+    const mgrFee = await ata(dd.moneyManager, dd.tokenMint);
+    const protoFee = await ata(adminPool.data.admin, dd.tokenMint);
+
+    // the manager/protocol fee ATAs must exist; create idempotently (investor pays rent)
+    const ixs: Instruction[] = [
+      await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: signer, owner: dd.moneyManager, mint: dd.tokenMint }),
+      await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: signer, owner: adminPool.data.admin, mint: dd.tokenMint }),
+    ];
+    const base = await getWithdrawTokenFundInstructionAsync({
+      investor: signer,
+      moneyManager: dd.moneyManager,
+      vaultPool: vaultAddr,
+      investorPool,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram2022: TOKEN_2022_PROGRAM_ID,
+      shares,
+    });
+    const ro = (a: Address): AccountMeta => ({ address: a, role: AccountRole.READONLY });
+    const w = (a: Address): AccountMeta => ({ address: a, role: AccountRole.WRITABLE });
+    const group = [ro(oraclePool), ro(priceUpdate), ro(dd.tokenMint), w(vaultAta), w(investorAta), w(mgrFee), w(protoFee)];
+    ixs.push({
+      programAddress: base.programAddress,
+      accounts: [...base.accounts, ...group] as AccountMeta[],
+      data: base.data,
+    });
+
+    const res = await client.sendTransaction(ixs, { abortSignal: signal });
+    await Promise.all([mutate(), mutatePosition()]);
+    return res.context.signature;
+  });
+
   if (error) return <Panel title="Can’t load vault">{String(error)}</Panel>;
   if (!vault) return <Panel title="Loading…">Reading vault state…</Panel>;
   if (!vault.exists) return <Panel title="Not found">No VaultPool at this address.</Panel>;
@@ -138,11 +193,27 @@ export function VaultDetail({ address }: { address: string }) {
           <h2 className="mb-3 font-semibold">Your position</h2>
           {!connected ? (
             <p className="text-sm opacity-60">Connect a wallet to deposit.</p>
-          ) : position?.exists ? (
-            <p className="text-sm">
-              <span className="opacity-60">Shares:</span>{' '}
-              {position.data.shares.toLocaleString()}
-            </p>
+          ) : position?.exists && position.data.shares > 0n ? (
+            <>
+              <p className="text-sm">
+                <span className="opacity-60">Shares:</span>{' '}
+                {position.data.shares.toLocaleString()}
+              </p>
+              <button
+                className="btn btn-ghost mt-3 w-full"
+                disabled={redeem.isRunning}
+                onClick={() => redeem.dispatch()}
+              >
+                {redeem.isRunning ? 'Redeeming…' : 'Redeem all'}
+              </button>
+              {redeem.error ? (
+                <p className="mt-2 text-xs text-red-400">{String(redeem.error)}</p>
+              ) : redeem.data ? (
+                <p className="mt-2 text-xs text-emerald-400">
+                  Redeemed — {shortAddress(String(redeem.data), 6, 6)}
+                </p>
+              ) : null}
+            </>
           ) : (
             <p className="text-sm opacity-60">No position yet.</p>
           )}

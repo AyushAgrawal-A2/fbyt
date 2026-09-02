@@ -25,6 +25,7 @@ export const JUPITER_PROGRAM_ID: Address = address(
 
 export const SYSTEM_PROGRAM_ID: Address = address('11111111111111111111111111111111');
 export const TOKEN_PROGRAM_ID: Address = address('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
+export const TOKEN_2022_PROGRAM_ID: Address = address('TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb');
 
 /** USD amounts on-chain are micro-USD (6 dp). */
 export const USD_DECIMALS = 6;
