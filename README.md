@@ -47,9 +47,12 @@ diagrams, and [`SECURITY.md`](./fbyt-assessment/SECURITY.md) for the findings.
 
 ## The app (`app`)
 
-A frontend and backend for the vault flows — wallet connection, vault creation/management, deposit,
-trade, and redeem — driving the program via its IDL. Work in progress; see [`app/README.md`](./app)
-once populated.
+A frontend + backend for the vault flows — **Next.js (App Router) + Tailwind**, a wallet-backed
+**@solana/kit v8** client, and a **Codama-generated typed client** from the program IDL. It runs against
+a local **surfnet** (a mainnet fork with cheatcodes) that hosts the reconstructed program, seeded by a
+bootstrap script. Pages: vault browse/leaderboard, vault detail + deposit, create vault, manager
+dashboard, and portfolio; API routes for vault listing, a Jupiter quote proxy, Sign-In-With-Solana, and
+a local faucet. See [`app/README.md`](./app/README.md) for setup and the run steps.
 
 ## Status
 
@@ -57,4 +60,5 @@ once populated.
   behaviors (a sub-token rounding in the token→USD conversion and the withdraw performance-fee model)
   are documented as known divergences rather than approximated (see `RPC_FINDINGS.md`).
 - Assessment: complete.
-- App: in progress.
+- App: core investor and manager flows implemented and building against the generated client; the
+  manager trade and operator fee-withdrawal flows are scaffolded (instruction builders ready).
