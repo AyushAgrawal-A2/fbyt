@@ -1,0 +1,243 @@
+{
+  "items": [
+    {
+      "address": "3KmYr58y1g5u4Xgv8PwpUSr6Nyu3exhYtK5eDgcJyRcP",
+      "index": "0",
+      "adminPoolAddress": "8D4fE8ijbjTC1n5nA1Tmqzkm5CAjryBxbQwrkZ7A1kLE",
+      "moneyManager": "3ZG6UMMoEbwVLM35j7goThrRyULYCymYGqzBVamGEj2U",
+      "tokenMint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+      "vaultPoolStatus": "Active",
+      "dormantAt": null,
+      "tradingDelegate": null,
+      "tradingDelegateUpdatedAt": null,
+      "raisedAmount": "13.200000",
+      "raisedAmountUSD": "13.197396",
+      "currentPnl": "39.5",
+      "highWatermarkAumMicroUsd": "20.133772",
+      "aumMicroUsd": "18409986",
+      "totalShares": "12788449",
+      "assetRegistry": "CL7kRrWuHQV2ZKZD38qMpidhcUHsyS16AuyGUYrbafED",
+      "minContributeAmount": "0.999781",
+      "maxRaisePeriod": "0",
+      "minRaiseAmount": "2.999344",
+      "managementFeeWithdrawPeriod": "2592000",
+      "withdrawCooldown": "3600",
+      "moneyManagementFee": "400",
+      "performanceFee": "2000",
+      "isOpenEnded": true,
+      "creationEventId": "58448",
+      "creationFeeLamports": "2000000",
+      "lastTradeAt": "1785857575",
+      "lastMmFeeWithdrawAt": "1787976008",
+      "createdAt": "2026-07-30T01:58:03.000Z",
+      "updatedAt": "2026-08-31T14:03:03.000Z",
+      "adminPool": {
+        "address": "8D4fE8ijbjTC1n5nA1Tmqzkm5CAjryBxbQwrkZ7A1kLE",
+        "admin": "FWK5K9x7YCDRGj24LdUR3DZBnfFBeT8Tfp9XX6YB3UaL",
+        "pendingAdmin": "11111111111111111111111111111111",
+        "operator": "27y3HZuEayKZQv4uxpLuSrgNqYapMEk34kBAU12Cjqxu",
+        "creationFee": "2000000",
+        "moneyManagementFeeMax": "1500",
+        "performanceFeeMax": "2000",
+        "protocolPerformanceFee": "2000",
+        "protocolMoneyManagementFee": "2000",
+        "tradingFee": "1000000",
+        "creationEventId": null,
+        "maxFundRaisingPeriod": "2592000",
+        "maxCooldownPeriod": "3888000",
+        "minRaiseAmount": "10000",
+        "minContributionAmount": "10000",
+        "idleLimitPeriod": "7776000",
+        "oracleMaxAge": "259200",
+        "dustThresholdUsd": "10000",
+        "maxAssetCount": 30,
+        "maxSlippageBps": 1000,
+        "createdAt": null,
+        "updatedAt": null
+      },
+      "currentPerformance": "39.5",
+      "vaultAUM": 18.41,
+      "managerAUM": 18.41,
+      "managerName": "sinsnft",
+      "managerAvatarUrl": "https://cdn.fbyt.io/avatars/3ZG6UMMoEbwVLM35j7goThrRyULYCymYGqzBVamGEj2U/6cd0fc89f7f2a10b.jpg",
+      "managerVerified": false,
+      "countTrades": 2,
+      "investorCount": 4,
+      "pnlHistory": [
+        {
+          "date": "2026-09-01",
+          "aum": "18.41",
+          "pnlPercent": "39.5"
+        },
+        {
+          "date": "2026-08-31",
+          "aum": "18.28",
+          "pnlPercent": "38.53"
+        },
+        {
+          "date": "2026-08-30",
+          "aum": "17.27",
+          "pnlPercent": "43.94"
+        },
+        {
+          "date": "2026-08-29",
+          "aum": "18.15",
+          "pnlPercent": "51.26"
+        },
+        {
+          "date": "2026-08-28",
+          "aum": "18.14",
+          "pnlPercent": "51.16"
+        },
+        {
+          "date": "2026-08-27",
+          "aum": "19.48",
+          "pnlPercent": "62.39"
+        },
+        {
+          "date": "2026-08-26",
+          "aum": "19.41",
+          "pnlPercent": "61.77"
+        },
+        {
+          "date": "2026-08-25",
+          "aum": "18.35",
+          "pnlPercent": "52.94"
+        },
+        {
+          "date": "2026-08-24",
+          "aum": "18.88",
+          "pnlPercent": "57.34"
+        },
+        {
+          "date": "2026-08-23",
+          "aum": "18.91",
+          "pnlPercent": "57.6"
+        },
+        {
+          "date": "2026-08-22",
+          "aum": "16.7",
+          "pnlPercent": "39.17"
+        },
+        {
+          "date": "2026-08-21",
+          "aum": "17.8",
+          "pnlPercent": "48.38"
+        },
+        {
+          "date": "2026-08-20",
+          "aum": "14.53",
+          "pnlPercent": "21.12"
+        },
+        {
+          "date": "2026-08-19",
+          "aum": "13.28",
+          "pnlPercent": "10.65"
+        },
+        {
+          "date": "2026-08-18",
+          "aum": "12.34",
+          "pnlPercent": "2.86"
+        },
+        {
+          "date": "2026-08-17",
+          "aum": "12.35",
+          "pnlPercent": "2.95"
+        },
+        {
+          "date": "2026-08-16",
+          "aum": "12.1",
+          "pnlPercent": "0.89"
+        },
+        {
+          "date": "2026-08-15",
+          "aum": "12.27",
+          "pnlPercent": "2.26"
+        },
+        {
+          "date": "2026-08-14",
+          "aum": "12.34",
+          "pnlPercent": "2.84"
+        },
+        {
+          "date": "2026-08-13",
+          "aum": "12.59",
+          "pnlPercent": "4.91"
+        },
+        {
+          "date": "2026-08-12",
+          "aum": "12.3",
+          "pnlPercent": "2.55"
+        },
+        {
+          "date": "2026-08-11",
+          "aum": "12.77",
+          "pnlPercent": "6.41"
+        },
+        {
+          "date": "2026-08-10",
+          "aum": "12.91",
+          "pnlPercent": "7.63"
+        },
+        {
+          "date": "2026-08-09",
+          "aum": "12.77",
+          "pnlPercent": "6.46"
+        },
+        {
+          "date": "2026-08-08",
+          "aum": "12.43",
+          "pnlPercent": "3.6"
+        },
+        {
+          "date": "2026-08-07",
+          "aum": "11.88",
+          "pnlPercent": "-0.94"
+        },
+        {
+          "date": "2026-08-06",
+          "aum": "11.88",
+          "pnlPercent": "-0.94"
+        },
+        {
+          "date": "2026-08-05",
+          "aum": "12.44",
+          "pnlPercent": "3.66"
+        },
+        {
+          "date": "2026-08-04",
+          "aum": "12.32",
+          "pnlPercent": "2.65"
+        },
+        {
+          "date": "2026-08-03",
+          "aum": "9.21",
+          "pnlPercent": "2.36"
+        }
+      ],
+      "remainingToRaise": "0",
+      "latestTradeAt": "2026-08-04T15:32:55.000Z",
+      "remainingToRedeem": 18.41,
+      "metadata": {
+        "vaultAddress": "3KmYr58y1g5u4Xgv8PwpUSr6Nyu3exhYtK5eDgcJyRcP",
+        "displayName": "sins vault",
+        "strategyDescription": "dca",
+        "mainAssetTags": [
+          "USDC"
+        ],
+        "typicalLockupMinDays": 0,
+        "typicalLockupMaxDays": 0,
+        "performanceFeeMinBps": 2000,
+        "performanceFeeMaxBps": 2000,
+        "managementFeeMinBps": 400,
+        "managementFeeMaxBps": 400,
+        "coverImageUrl": "https://cdn.fbyt.io/vault-covers/3KmYr58y1g5u4Xgv8PwpUSr6Nyu3exhYtK5eDgcJyRcP/c69b9b09975bee0e.png",
+        "createdAt": "2026-07-30T01:58:18.883Z",
+        "updatedAt": "2026-07-30T01:58:18.882Z"
+      }
+    }
+  ],
+  "total": 311,
+  "page": 1,
+  "limit": 1
+}

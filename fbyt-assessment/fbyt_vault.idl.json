@@ -1,0 +1,5297 @@
+{
+  "address": "",
+  "metadata": {
+    "name": "fbyt_vault",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [
+    {
+      "name": "admin_accept_ownership",
+      "discriminator": [
+        102,
+        203,
+        241,
+        127,
+        141,
+        1,
+        31,
+        46
+      ],
+      "accounts": [
+        {
+          "name": "pending_admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "admin_modify_fee",
+      "discriminator": [
+        86,
+        81,
+        220,
+        94,
+        144,
+        49,
+        197,
+        119
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "creation_fee",
+          "type": "u64"
+        },
+        {
+          "name": "protocol_performance_fee",
+          "type": "u16"
+        },
+        {
+          "name": "protocol_money_management_fee",
+          "type": "u16"
+        },
+        {
+          "name": "trading_fee",
+          "type": "u64"
+        },
+        {
+          "name": "money_management_yearly_fee_max",
+          "type": "u16"
+        },
+        {
+          "name": "performance_fee_max",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "admin_transfer_ownership",
+      "discriminator": [
+        195,
+        184,
+        73,
+        211,
+        16,
+        243,
+        87,
+        87
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "pending_admin",
+          "writable": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "admin_update_contribution_amount_min_usd",
+      "discriminator": [
+        1,
+        132,
+        99,
+        67,
+        198,
+        246,
+        184,
+        237
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_contribution_amount_min_usd",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_dust_threshold_usd",
+      "discriminator": [
+        79,
+        113,
+        70,
+        239,
+        204,
+        164,
+        60,
+        232
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_dust_threshold_usd",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_fundrising_period_max",
+      "discriminator": [
+        236,
+        155,
+        61,
+        145,
+        172,
+        211,
+        35,
+        72
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_fundrising_period_max",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_idle_period",
+      "discriminator": [
+        254,
+        250,
+        63,
+        86,
+        169,
+        183,
+        86,
+        156
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_idle_period",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_max_asset_count",
+      "discriminator": [
+        2,
+        11,
+        171,
+        52,
+        181,
+        238,
+        249,
+        97
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_max_asset_count",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_max_slippage_bps",
+      "discriminator": [
+        214,
+        191,
+        45,
+        126,
+        108,
+        57,
+        132,
+        209
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_max_slippage_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_operator",
+      "discriminator": [
+        85,
+        191,
+        68,
+        246,
+        190,
+        136,
+        193,
+        252
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "operator",
+          "writable": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "admin_update_oracle_max_age",
+      "discriminator": [
+        69,
+        48,
+        184,
+        249,
+        25,
+        171,
+        16,
+        225
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_oracle_max_age",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_raise_amount_min_usd",
+      "discriminator": [
+        131,
+        41,
+        148,
+        234,
+        13,
+        59,
+        86,
+        170
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_raise_amount_min_usd",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "admin_update_withdraw_cooldown_max",
+      "discriminator": [
+        173,
+        66,
+        238,
+        232,
+        163,
+        211,
+        171,
+        86
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_withdraw_cooldown_max",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "approve_oracle_pool",
+      "discriminator": [
+        200,
+        240,
+        178,
+        43,
+        93,
+        143,
+        45,
+        152
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "admin_pool"
+          ]
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "oracle_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  97,
+                  99,
+                  108,
+                  101,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_oracle_pool",
+      "discriminator": [
+        114,
+        72,
+        210,
+        27,
+        53,
+        66,
+        222,
+        105
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "admin_pool"
+          ]
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "oracle_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  97,
+                  99,
+                  108,
+                  101,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ]
+          }
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "close_vault",
+      "discriminator": [
+        141,
+        103,
+        17,
+        126,
+        72,
+        75,
+        29,
+        29
+      ],
+      "accounts": [
+        {
+          "name": "admin_pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "vault_pool",
+          "writable": true
+        },
+        {
+          "name": "money_manager",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "vault_pool"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_admin_pool",
+      "docs": [
+        "Creates an admin pool with specified fees and parameters.",
+        "",
+        "This function initializes an admin pool, setting various fees and limits",
+        "that will apply to vaults created by this admin.",
+        "",
+        "# Arguments",
+        "",
+        "* `ctx` - The context for the admin pool creation",
+        "* `creation_fee` - Fee for creating a new vault",
+        "* `protocol_fee` - Fee for using the protocol",
+        "* `trading_fee` - Fee for trading activities",
+        "* `money_management_fee_max` - Maximum fee for managing money in vaults",
+        "* `performance_fee_max` - Maximum performance-based fee",
+        "* `withdraw_cooldown_max` - Maximum cooldown period for withdrawals",
+        "",
+        "# Returns",
+        "",
+        "Returns a `Result<()>` indicating success or failure of the admin pool creation"
+      ],
+      "discriminator": [
+        41,
+        52,
+        252,
+        73,
+        88,
+        84,
+        123,
+        111
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "operator",
+          "writable": true
+        },
+        {
+          "name": "program",
+          "address": "DNgg2FmwchUHYx2QiZ9pNJn1q5zypMprkSWFLUnNDigm"
+        },
+        {
+          "name": "program_data"
+        },
+        {
+          "name": "admin_pool",
+          "docs": [
+            "Initialize an account to store the vault state"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "To create a new program account"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "creation_fee",
+          "type": "u64"
+        },
+        {
+          "name": "protocol_performance_fee",
+          "type": "u16"
+        },
+        {
+          "name": "protocol_money_management_fee",
+          "type": "u16"
+        },
+        {
+          "name": "trading_fee",
+          "type": "u64"
+        },
+        {
+          "name": "money_management_yearly_fee_max",
+          "type": "u16"
+        },
+        {
+          "name": "performance_fee_max",
+          "type": "u16"
+        },
+        {
+          "name": "withdraw_cooldown_max",
+          "type": "u64"
+        },
+        {
+          "name": "fundrising_period_max",
+          "type": "u64"
+        },
+        {
+          "name": "raise_amount_min_usd",
+          "type": "u64"
+        },
+        {
+          "name": "contribution_amount_min_usd",
+          "type": "u64"
+        },
+        {
+          "name": "oracle_max_age",
+          "type": "u64"
+        },
+        {
+          "name": "idle_period",
+          "type": "u64"
+        },
+        {
+          "name": "dust_threshold_usd",
+          "type": "u64"
+        },
+        {
+          "name": "max_asset_count",
+          "type": "u16"
+        },
+        {
+          "name": "max_slippage_bps",
+          "type": "u16"
+        }
+      ]
+    },
+    {
+      "name": "create_investor_pool",
+      "discriminator": [
+        46,
+        57,
+        4,
+        241,
+        88,
+        18,
+        154,
+        89
+      ],
+      "accounts": [
+        {
+          "name": "investor",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "vault_pool",
+          "writable": true
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "investor_pool",
+          "docs": [
+            "Initialize an account to store the vault state"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  73,
+                  110,
+                  118,
+                  101,
+                  115,
+                  116,
+                  111,
+                  114,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "investor"
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "To create a new program account"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_money_manager_pool",
+      "discriminator": [
+        169,
+        250,
+        152,
+        215,
+        39,
+        206,
+        204,
+        11
+      ],
+      "accounts": [
+        {
+          "name": "admin_pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "money_manager",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "money_manager_pool",
+          "docs": [
+            "Initialize an account to store the money manager pool state"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  77,
+                  111,
+                  110,
+                  101,
+                  121,
+                  77,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "money_manager"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "To create a new program account"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "create_oracle_pool",
+      "discriminator": [
+        53,
+        101,
+        159,
+        127,
+        234,
+        217,
+        156,
+        223
+      ],
+      "accounts": [
+        {
+          "name": "requester",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_mint",
+          "writable": true
+        },
+        {
+          "name": "oracle_pool",
+          "docs": [
+            "Initialize an account to store the vault state"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  97,
+                  99,
+                  108,
+                  101,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "To create a new program account"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "feed_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "create_vault",
+      "docs": [
+        "Creates a new vault with specified parameters",
+        "",
+        "This function initializes a new vault with the given configuration parameters.",
+        "It sets up the vault's contribution limits, raise periods, raise amounts,",
+        "idle and withdrawal periods, and various fees.",
+        "",
+        "# Arguments",
+        "",
+        "* `ctx` - The context for the vault creation",
+        "* `min_contribute_amount` - Minimum amount that can be contributed to the vault",
+        "* `max_contribute_amount` - Maximum amount that can be contributed to the vault",
+        "* `min_raise_period` - Minimum period for raising funds",
+        "* `max_raise_period` - Maximum period for raising funds",
+        "* `min_raise_amount` - Minimum amount to be raised for the vault to become active",
+        "* `max_raise_amount` - Maximum amount that can be raised",
+        "* `idle_limit_period` - Period after which idle funds can be withdrawn",
+        "* `withdraw_period` - Period during which withdrawals are allowed",
+        "* `money_management_fee` - Fee for managing the money in the vault",
+        "* `protocol_fee` - Fee for using the protocol",
+        "* `performance_fee` - Fee based on the performance of the vault",
+        "",
+        "# Returns",
+        "",
+        "Returns a `Result<()>` indicating success or failure of the vault creation"
+      ],
+      "discriminator": [
+        29,
+        237,
+        247,
+        208,
+        193,
+        82,
+        54,
+        135
+      ],
+      "accounts": [
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "money_manager_pool",
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "admin",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true,
+          "relations": [
+            "admin_pool"
+          ]
+        },
+        {
+          "name": "money_manager",
+          "docs": [
+            "Address paying to create the vault. Can be anyone"
+          ],
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "money_manager_pool"
+          ]
+        },
+        {
+          "name": "money_manager_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  77,
+                  111,
+                  110,
+                  101,
+                  121,
+                  77,
+                  97,
+                  110,
+                  97,
+                  103,
+                  101,
+                  114,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "money_manager"
+              }
+            ]
+          }
+        },
+        {
+          "name": "vault_pool",
+          "docs": [
+            "Initialize an account to store the vault state"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  86,
+                  97,
+                  117,
+                  108,
+                  116,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "money_manager"
+              },
+              {
+                "kind": "account",
+                "path": "money_manager_pool.vaults_amount",
+                "account": "MoneyManagerPool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "asset_registry",
+          "docs": [
+            "Initialize an account to store the asset registry"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  115,
+                  115,
+                  101,
+                  116,
+                  82,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "oracle_pool"
+        },
+        {
+          "name": "price_update"
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "min_contribute_amount",
+          "type": "u64"
+        },
+        {
+          "name": "raise_period",
+          "type": "u64"
+        },
+        {
+          "name": "min_raise_amount",
+          "type": "u64"
+        },
+        {
+          "name": "mm_withdraw_period",
+          "type": "u64"
+        },
+        {
+          "name": "withdraw_cooldown",
+          "type": "u64"
+        },
+        {
+          "name": "money_management_fee",
+          "type": "u16"
+        },
+        {
+          "name": "performance_fee",
+          "type": "u16"
+        },
+        {
+          "name": "is_open_ended",
+          "type": "bool"
+        }
+      ]
+    },
+    {
+      "name": "deposit_token_fund",
+      "discriminator": [
+        147,
+        208,
+        90,
+        77,
+        202,
+        172,
+        95,
+        83
+      ],
+      "accounts": [
+        {
+          "name": "investor",
+          "docs": [
+            "Address paying to create the vault. Can be anyone"
+          ],
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "investor_pool"
+          ]
+        },
+        {
+          "name": "admin_pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "vault_pool",
+            "investor_pool",
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "vault_pool",
+          "writable": true,
+          "relations": [
+            "asset_registry",
+            "investor_pool"
+          ]
+        },
+        {
+          "name": "asset_registry",
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  115,
+                  115,
+                  101,
+                  116,
+                  82,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "investor_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  73,
+                  110,
+                  118,
+                  101,
+                  115,
+                  116,
+                  111,
+                  114,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "investor"
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ]
+          }
+        },
+        {
+          "name": "oracle_pool",
+          "writable": true
+        },
+        {
+          "name": "from_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "investor"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "to_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_program"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "vault_pool",
+            "investor_pool",
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "price_update"
+        },
+        {
+          "name": "token_program"
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "To create a new program account"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "dummy_swap",
+      "discriminator": [
+        42,
+        119,
+        161,
+        106,
+        186,
+        33,
+        230,
+        133
+      ],
+      "accounts": [
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "vault_pool",
+            "oracle_pool_from",
+            "oracle_pool_to"
+          ]
+        },
+        {
+          "name": "admin",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true,
+          "relations": [
+            "admin_pool"
+          ]
+        },
+        {
+          "name": "trader",
+          "docs": [
+            "Whoever authorizes this trade: the money manager, or the trading",
+            "delegate when one is set. Pays the SOL trading fee and realloc rent,",
+            "mirroring `jupiter_swap`."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "money_manager",
+          "docs": [
+            "Staging-only counterparty, and necessarily still a signer.",
+            "",
+            "Unlike `jupiter_swap`, this instruction does not touch a real market: the",
+            "vault sends input tokens to the manager's ATA and the manager sends",
+            "output tokens back, simulating a fill. `transfer_to_vault` uses this",
+            "account as the SPL transfer authority, so the token holder must sign.",
+            "",
+            "The delegate cannot replace it — an execution wallet holds only gas SOL,",
+            "never trading inventory. A delegate-initiated dummy swap therefore",
+            "carries two signatures, and `dummy_swap` proves the authorization path",
+            "rather than the unattended-execution property. `jupiter_swap` is what",
+            "exercises unattended trading for real."
+          ],
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "vault_pool",
+          "writable": true,
+          "relations": [
+            "asset_registry"
+          ]
+        },
+        {
+          "name": "asset_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  115,
+                  115,
+                  101,
+                  116,
+                  82,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "input_mint"
+        },
+        {
+          "name": "input_mint_program"
+        },
+        {
+          "name": "output_mint"
+        },
+        {
+          "name": "output_mint_program"
+        },
+        {
+          "name": "vault_input_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "input_mint_program"
+              },
+              {
+                "kind": "account",
+                "path": "input_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "vault_output_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "output_mint_program"
+              },
+              {
+                "kind": "account",
+                "path": "output_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "money_manager_input_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "money_manager"
+              },
+              {
+                "kind": "account",
+                "path": "input_mint_program"
+              },
+              {
+                "kind": "account",
+                "path": "input_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "money_manager_output_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "money_manager"
+              },
+              {
+                "kind": "account",
+                "path": "output_mint_program"
+              },
+              {
+                "kind": "account",
+                "path": "output_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "oracle_pool_from",
+          "writable": true
+        },
+        {
+          "name": "oracle_pool_to",
+          "writable": true
+        },
+        {
+          "name": "input_price_update"
+        },
+        {
+          "name": "output_price_update"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "input_amount",
+          "type": "u64"
+        },
+        {
+          "name": "output_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "get_price_info",
+      "discriminator": [
+        214,
+        168,
+        85,
+        16,
+        228,
+        217,
+        38,
+        6
+      ],
+      "accounts": [
+        {
+          "name": "payer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "admin_pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "price_update",
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "feed_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "revoke_trading_delegate",
+      "docs": [
+        "Revoke the vault's trading delegate. Manager-signed, instant, on-chain."
+      ],
+      "discriminator": [
+        43,
+        207,
+        174,
+        48,
+        174,
+        77,
+        188,
+        120
+      ],
+      "accounts": [
+        {
+          "name": "vault_pool",
+          "writable": true
+        },
+        {
+          "name": "money_manager",
+          "signer": true,
+          "relations": [
+            "vault_pool"
+          ]
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "set_trading_delegate",
+      "docs": [
+        "Authorize a second key to trade this vault (bot trading). Manager-signed."
+      ],
+      "discriminator": [
+        181,
+        195,
+        120,
+        236,
+        254,
+        84,
+        61,
+        77
+      ],
+      "accounts": [
+        {
+          "name": "vault_pool",
+          "writable": true
+        },
+        {
+          "name": "money_manager",
+          "signer": true,
+          "relations": [
+            "vault_pool"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "trading_delegate",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "swap",
+      "docs": [
+        "Executes a swap through Jupiter aggregator",
+        "",
+        "# Arguments",
+        "* `ctx` - The context for the swap operation",
+        "* `data` - Serialized swap instruction data",
+        "",
+        "# Errors",
+        "Returns error if the swap operation fails",
+        "",
+        "# Returns",
+        "* `Result<()>` - Success or error result"
+      ],
+      "discriminator": [
+        248,
+        198,
+        158,
+        145,
+        225,
+        117,
+        135,
+        200
+      ],
+      "accounts": [
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "vault_pool",
+            "oracle_pool_from",
+            "oracle_pool_to"
+          ]
+        },
+        {
+          "name": "admin",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true,
+          "relations": [
+            "admin_pool"
+          ]
+        },
+        {
+          "name": "trader",
+          "docs": [
+            "Whoever is signing this trade: the vault's money manager, or its trading",
+            "delegate when one is set. Authorization is asserted in the handler via",
+            "`VaultPool::can_trade` — it cannot be a `has_one` because either of two",
+            "keys is acceptable.",
+            "",
+            "This account also **pays** the SOL trading fee and any asset-registry",
+            "realloc rent. That is deliberate: if the delegate signed but the manager",
+            "paid, unattended bot trades would drain the manager's personal wallet and",
+            "fail whenever it ran dry."
+          ],
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "vault_pool",
+          "writable": true,
+          "relations": [
+            "asset_registry"
+          ]
+        },
+        {
+          "name": "asset_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  115,
+                  115,
+                  101,
+                  116,
+                  82,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "input_mint"
+        },
+        {
+          "name": "input_mint_program"
+        },
+        {
+          "name": "output_mint"
+        },
+        {
+          "name": "output_mint_program"
+        },
+        {
+          "name": "vault_input_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "input_mint_program"
+              },
+              {
+                "kind": "account",
+                "path": "input_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "vault_output_token_account",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "output_mint_program"
+              },
+              {
+                "kind": "account",
+                "path": "output_mint"
+              }
+            ],
+            "program": {
+              "kind": "const",
+              "value": [
+                140,
+                151,
+                37,
+                143,
+                78,
+                36,
+                137,
+                241,
+                187,
+                61,
+                16,
+                41,
+                20,
+                142,
+                13,
+                131,
+                11,
+                90,
+                19,
+                153,
+                218,
+                255,
+                16,
+                132,
+                4,
+                142,
+                123,
+                216,
+                219,
+                233,
+                248,
+                89
+              ]
+            }
+          }
+        },
+        {
+          "name": "oracle_pool_from",
+          "writable": true
+        },
+        {
+          "name": "oracle_pool_to",
+          "writable": true
+        },
+        {
+          "name": "input_price_update"
+        },
+        {
+          "name": "output_price_update"
+        },
+        {
+          "name": "jupiter_program",
+          "address": "JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4"
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "data",
+          "type": "bytes"
+        }
+      ]
+    },
+    {
+      "name": "update_oracle_pool",
+      "discriminator": [
+        219,
+        158,
+        32,
+        167,
+        160,
+        27,
+        134,
+        167
+      ],
+      "accounts": [
+        {
+          "name": "admin",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "admin_pool"
+          ]
+        },
+        {
+          "name": "admin_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "token_mint",
+          "writable": true,
+          "relations": [
+            "oracle_pool"
+          ]
+        },
+        {
+          "name": "oracle_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  111,
+                  114,
+                  97,
+                  99,
+                  108,
+                  101,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "token_mint"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "feed_id",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_money_management_fee",
+      "discriminator": [
+        234,
+        246,
+        181,
+        24,
+        134,
+        165,
+        70,
+        64
+      ],
+      "accounts": [
+        {
+          "name": "admin_pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "operator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "vault_pool",
+          "writable": true,
+          "relations": [
+            "asset_registry"
+          ]
+        },
+        {
+          "name": "asset_registry",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  115,
+                  115,
+                  101,
+                  116,
+                  82,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "token_program2022",
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "withdraw_token_fund",
+      "discriminator": [
+        24,
+        52,
+        139,
+        148,
+        82,
+        157,
+        134,
+        183
+      ],
+      "accounts": [
+        {
+          "name": "investor",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "investor_pool"
+          ]
+        },
+        {
+          "name": "money_manager",
+          "docs": [
+            "CHECK"
+          ],
+          "writable": true,
+          "relations": [
+            "vault_pool"
+          ]
+        },
+        {
+          "name": "admin_pool",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  100,
+                  109,
+                  105,
+                  110,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              }
+            ]
+          },
+          "relations": [
+            "vault_pool",
+            "investor_pool"
+          ]
+        },
+        {
+          "name": "vault_pool",
+          "writable": true,
+          "relations": [
+            "asset_registry",
+            "investor_pool"
+          ]
+        },
+        {
+          "name": "asset_registry",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  65,
+                  115,
+                  115,
+                  101,
+                  116,
+                  82,
+                  101,
+                  103,
+                  105,
+                  115,
+                  116,
+                  114,
+                  121
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "investor_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  73,
+                  110,
+                  118,
+                  101,
+                  115,
+                  116,
+                  111,
+                  114,
+                  80,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "investor"
+              },
+              {
+                "kind": "account",
+                "path": "admin_pool"
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool"
+              },
+              {
+                "kind": "account",
+                "path": "vault_pool.token_mint",
+                "account": "VaultPool"
+              }
+            ]
+          }
+        },
+        {
+          "name": "token_program",
+          "address": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+        },
+        {
+          "name": "token_program2022",
+          "docs": [
+            "Spl token program or token program 2022"
+          ],
+          "address": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb"
+        },
+        {
+          "name": "system_program",
+          "docs": [
+            "To create a new program account"
+          ],
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "shares",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "AdminPool",
+      "discriminator": [
+        151,
+        222,
+        40,
+        94,
+        157,
+        115,
+        214,
+        53
+      ]
+    },
+    {
+      "name": "AssetRegistry",
+      "discriminator": [
+        60,
+        94,
+        213,
+        134,
+        205,
+        170,
+        175,
+        68
+      ]
+    },
+    {
+      "name": "InvestorPool",
+      "discriminator": [
+        246,
+        171,
+        125,
+        107,
+        25,
+        201,
+        36,
+        95
+      ]
+    },
+    {
+      "name": "MoneyManagerPool",
+      "discriminator": [
+        16,
+        148,
+        170,
+        83,
+        71,
+        18,
+        27,
+        141
+      ]
+    },
+    {
+      "name": "OraclePool",
+      "discriminator": [
+        42,
+        185,
+        120,
+        24,
+        182,
+        8,
+        43,
+        146
+      ]
+    },
+    {
+      "name": "PriceUpdateV2",
+      "discriminator": [
+        34,
+        241,
+        35,
+        99,
+        157,
+        126,
+        244,
+        205
+      ]
+    },
+    {
+      "name": "VaultPool",
+      "discriminator": [
+        64,
+        55,
+        145,
+        17,
+        146,
+        105,
+        18,
+        195
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "AdminPoolAcceptOwnershipEvent",
+      "discriminator": [
+        73,
+        160,
+        77,
+        127,
+        42,
+        232,
+        175,
+        37
+      ]
+    },
+    {
+      "name": "AdminPoolCreatedEvent",
+      "discriminator": [
+        202,
+        231,
+        83,
+        135,
+        223,
+        92,
+        111,
+        187
+      ]
+    },
+    {
+      "name": "AdminPoolModifyFeeEvent",
+      "discriminator": [
+        1,
+        66,
+        168,
+        201,
+        231,
+        122,
+        146,
+        148
+      ]
+    },
+    {
+      "name": "AdminPoolTransferOwnershipEvent",
+      "discriminator": [
+        65,
+        203,
+        60,
+        168,
+        88,
+        18,
+        147,
+        245
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateContributionAmountMinUsdEvent",
+      "discriminator": [
+        97,
+        86,
+        165,
+        198,
+        89,
+        187,
+        42,
+        170
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateDustThresholdUsdEvent",
+      "discriminator": [
+        1,
+        131,
+        174,
+        51,
+        249,
+        73,
+        62,
+        199
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateFundrisingPeriodMaxEvent",
+      "discriminator": [
+        40,
+        11,
+        21,
+        168,
+        111,
+        158,
+        119,
+        155
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateIdlePeriodEvent",
+      "discriminator": [
+        203,
+        36,
+        23,
+        42,
+        136,
+        94,
+        77,
+        39
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateMaxAssetCountEvent",
+      "discriminator": [
+        57,
+        234,
+        146,
+        97,
+        223,
+        54,
+        15,
+        149
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateMaxSlippageBpsEvent",
+      "discriminator": [
+        172,
+        57,
+        56,
+        212,
+        168,
+        211,
+        115,
+        170
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateOperatorEvent",
+      "discriminator": [
+        30,
+        216,
+        85,
+        192,
+        55,
+        35,
+        25,
+        82
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateOracleMaxAgeEvent",
+      "discriminator": [
+        0,
+        128,
+        5,
+        132,
+        12,
+        58,
+        164,
+        210
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateRaiseAmountMinUsdEvent",
+      "discriminator": [
+        56,
+        159,
+        123,
+        136,
+        172,
+        202,
+        28,
+        92
+      ]
+    },
+    {
+      "name": "AdminPoolUpdateWithdrawCooldownMaxEvent",
+      "discriminator": [
+        245,
+        190,
+        85,
+        48,
+        172,
+        75,
+        221,
+        147
+      ]
+    },
+    {
+      "name": "ApproveOraclePoolEvent",
+      "discriminator": [
+        39,
+        241,
+        67,
+        156,
+        101,
+        239,
+        28,
+        16
+      ]
+    },
+    {
+      "name": "AssetAddedEvent",
+      "discriminator": [
+        99,
+        36,
+        56,
+        1,
+        206,
+        211,
+        88,
+        72
+      ]
+    },
+    {
+      "name": "AssetRemovedEvent",
+      "discriminator": [
+        28,
+        102,
+        182,
+        97,
+        38,
+        69,
+        153,
+        1
+      ]
+    },
+    {
+      "name": "CloseOraclePoolEvent",
+      "discriminator": [
+        71,
+        79,
+        18,
+        24,
+        210,
+        211,
+        100,
+        178
+      ]
+    },
+    {
+      "name": "CloseVaultEvent",
+      "discriminator": [
+        35,
+        37,
+        158,
+        74,
+        115,
+        93,
+        175,
+        136
+      ]
+    },
+    {
+      "name": "CreateOraclePoolEvent",
+      "discriminator": [
+        85,
+        70,
+        44,
+        67,
+        217,
+        131,
+        44,
+        111
+      ]
+    },
+    {
+      "name": "DepositTokenFundEvent",
+      "discriminator": [
+        57,
+        163,
+        14,
+        52,
+        109,
+        36,
+        151,
+        115
+      ]
+    },
+    {
+      "name": "InvestorPoolCreatedEvent",
+      "discriminator": [
+        172,
+        239,
+        123,
+        57,
+        48,
+        133,
+        248,
+        84
+      ]
+    },
+    {
+      "name": "MoneyManagerPoolCreatedEvent",
+      "discriminator": [
+        103,
+        223,
+        171,
+        237,
+        44,
+        10,
+        103,
+        58
+      ]
+    },
+    {
+      "name": "TradingDelegateRevokedEvent",
+      "discriminator": [
+        203,
+        204,
+        153,
+        205,
+        100,
+        205,
+        39,
+        219
+      ]
+    },
+    {
+      "name": "TradingDelegateSetEvent",
+      "discriminator": [
+        86,
+        89,
+        149,
+        132,
+        237,
+        39,
+        163,
+        74
+      ]
+    },
+    {
+      "name": "TradingEvent",
+      "discriminator": [
+        29,
+        122,
+        43,
+        227,
+        187,
+        48,
+        131,
+        190
+      ]
+    },
+    {
+      "name": "UpdateOraclePoolEvent",
+      "discriminator": [
+        9,
+        108,
+        207,
+        208,
+        61,
+        77,
+        138,
+        62
+      ]
+    },
+    {
+      "name": "VaultCreatedEvent",
+      "discriminator": [
+        81,
+        80,
+        244,
+        58,
+        136,
+        54,
+        236,
+        111
+      ]
+    },
+    {
+      "name": "WithdrawMoneyManagementFeeEvent",
+      "discriminator": [
+        54,
+        178,
+        69,
+        114,
+        250,
+        243,
+        165,
+        196
+      ]
+    },
+    {
+      "name": "WithdrawTokenFundEvent",
+      "discriminator": [
+        123,
+        30,
+        127,
+        14,
+        182,
+        8,
+        134,
+        132
+      ]
+    },
+    {
+      "name": "WithdrawTokenFundResultEvent",
+      "discriminator": [
+        102,
+        248,
+        226,
+        121,
+        201,
+        191,
+        113,
+        51
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "LOK",
+      "msg": "LOK"
+    },
+    {
+      "code": 6001,
+      "name": "NotApproved",
+      "msg": "Not approved"
+    },
+    {
+      "code": 6002,
+      "name": "NotSupportMint",
+      "msg": "Not support token_2022 mint extension"
+    },
+    {
+      "code": 6003,
+      "name": "MissingTickArrayBitmapExtensionAccount",
+      "msg": "Missing tickarray bitmap extension account"
+    },
+    {
+      "code": 6004,
+      "name": "InsufficientLiquidityForDirection",
+      "msg": "Insufficient liquidity for this direction"
+    },
+    {
+      "code": 6005,
+      "name": "MaxTokenOverflow",
+      "msg": "Max token overflow"
+    },
+    {
+      "code": 6006,
+      "name": "CalculateOverflow",
+      "msg": "calculate overflow"
+    },
+    {
+      "code": 6007,
+      "name": "InsufficientFunds",
+      "msg": "Insufficient funds"
+    },
+    {
+      "code": 6008,
+      "name": "ZeroTransfer",
+      "msg": "Zero Transfer"
+    },
+    {
+      "code": 6009,
+      "name": "PriceFeedError",
+      "msg": "Price Feed Error"
+    },
+    {
+      "code": 6010,
+      "name": "InvalidFeeConfiguration",
+      "msg": "Invalid fee configuration"
+    },
+    {
+      "code": 6011,
+      "name": "InvalidDepositAmount",
+      "msg": "Invalid deposit amount"
+    },
+    {
+      "code": 6012,
+      "name": "InvalidTokenMint",
+      "msg": "Invalid token mint"
+    },
+    {
+      "code": 6013,
+      "name": "VaultNotActive",
+      "msg": "Vault not active"
+    },
+    {
+      "code": 6014,
+      "name": "MaxRaiseAmountExceeded",
+      "msg": "Max raise amount exceeded"
+    },
+    {
+      "code": 6015,
+      "name": "MinRaiseAmountNotReached",
+      "msg": "Min raise amount not reached"
+    },
+    {
+      "code": 6016,
+      "name": "OutsideRaisePeriod",
+      "msg": "Outside raise period"
+    },
+    {
+      "code": 6017,
+      "name": "MinRaisePeriodNotMet",
+      "msg": "Min raise period not met"
+    },
+    {
+      "code": 6018,
+      "name": "InvalidRaiseAmount",
+      "msg": "Invalid raise amount"
+    },
+    {
+      "code": 6019,
+      "name": "InvalidContributionAmount",
+      "msg": "Invalid contribution amount"
+    },
+    {
+      "code": 6020,
+      "name": "InvalidMaxContribution",
+      "msg": "Invalid max contribution"
+    },
+    {
+      "code": 6021,
+      "name": "InvalidRaisePeriod",
+      "msg": "Invalid raise period"
+    },
+    {
+      "code": 6022,
+      "name": "InvalidVaultPool",
+      "msg": "Invalid vault pool"
+    },
+    {
+      "code": 6023,
+      "name": "InvalidAdminPool",
+      "msg": "Invalid admin pool"
+    },
+    {
+      "code": 6024,
+      "name": "InvalidInvestorPool",
+      "msg": "Invalid investor pool"
+    },
+    {
+      "code": 6025,
+      "name": "InvalidInvestor",
+      "msg": "Invalid investor"
+    },
+    {
+      "code": 6026,
+      "name": "IdleLimitPeriodExceeded",
+      "msg": "Idle limit period exceeded"
+    },
+    {
+      "code": 6027,
+      "name": "VaultInActive",
+      "msg": "Vault inactive"
+    },
+    {
+      "code": 6028,
+      "name": "InvalidFromAccount",
+      "msg": "Invalid from account"
+    },
+    {
+      "code": 6029,
+      "name": "InvalidToAccount",
+      "msg": "Invalid to account"
+    },
+    {
+      "code": 6030,
+      "name": "InvalidToAccountOwner",
+      "msg": "Invalid to account owner"
+    },
+    {
+      "code": 6031,
+      "name": "InvalidFromAccountOwner",
+      "msg": "Invalid from account owner"
+    },
+    {
+      "code": 6032,
+      "name": "FundRaisePeriodNotOver",
+      "msg": "Fund raise period not over"
+    },
+    {
+      "code": 6033,
+      "name": "InvalidAdmin",
+      "msg": "Invalid admin"
+    },
+    {
+      "code": 6034,
+      "name": "InvalidOraclePool",
+      "msg": "Invalid oracle pool"
+    },
+    {
+      "code": 6035,
+      "name": "OutsideWithdrawPeriod",
+      "msg": "OUtsideWithdrawPeriod"
+    },
+    {
+      "code": 6036,
+      "name": "InvalidAccountLength",
+      "msg": "Invalid account length"
+    },
+    {
+      "code": 6037,
+      "name": "InvalidAccountData",
+      "msg": "Invalid account data"
+    },
+    {
+      "code": 6038,
+      "name": "InvalidPriceOracle",
+      "msg": "Invalid price oracle"
+    },
+    {
+      "code": 6039,
+      "name": "InvalidPriceFeed",
+      "msg": "Invalid price feed"
+    },
+    {
+      "code": 6040,
+      "name": "InvalidTradingPeriod",
+      "msg": "Invalid trading period"
+    },
+    {
+      "code": 6041,
+      "name": "VaultClosed",
+      "msg": "Vault closed"
+    },
+    {
+      "code": 6042,
+      "name": "WithdrawAmountExceedsLimit",
+      "msg": "Withdraw amount exceeds limit"
+    },
+    {
+      "code": 6043,
+      "name": "InvalidMoneyManagerAccount",
+      "msg": "Invalid money manager account"
+    },
+    {
+      "code": 6044,
+      "name": "InvalidAdminAccount",
+      "msg": "Invalid admin account"
+    },
+    {
+      "code": 6045,
+      "name": "InvalidMoneyManager",
+      "msg": "Invalid money manager"
+    },
+    {
+      "code": 6046,
+      "name": "Overflow",
+      "msg": "Overflow"
+    },
+    {
+      "code": 6047,
+      "name": "InvalidVaultOwner",
+      "msg": "Invalid vault owner"
+    },
+    {
+      "code": 6048,
+      "name": "InvalidTokenOwner",
+      "msg": "Invalid token owner"
+    },
+    {
+      "code": 6049,
+      "name": "InvalidTokenVault",
+      "msg": "Invalid token vault"
+    },
+    {
+      "code": 6050,
+      "name": "InvalidWithdrawCooldown",
+      "msg": "Invalid withdraw cooldown"
+    },
+    {
+      "code": 6051,
+      "name": "InvalidWithdrawPeriod",
+      "msg": "Invalid withdraw period"
+    },
+    {
+      "code": 6052,
+      "name": "WithdrawCooldownNotEnded",
+      "msg": "Withdraw cooldown not ended"
+    },
+    {
+      "code": 6053,
+      "name": "VaultIsDormant",
+      "msg": "Vault is dormant"
+    },
+    {
+      "code": 6054,
+      "name": "InvalidOperator",
+      "msg": "Invalid operator"
+    },
+    {
+      "code": 6055,
+      "name": "OutsideOperatorWithdrawPeriod",
+      "msg": "Outside operator withdraw period"
+    },
+    {
+      "code": 6056,
+      "name": "InvalidAssetRegistry",
+      "msg": "Invalid asset registry"
+    },
+    {
+      "code": 6057,
+      "name": "AssetNotFound",
+      "msg": "Asset not found"
+    },
+    {
+      "code": 6058,
+      "name": "InvalidInputBalance",
+      "msg": "Invalid input balance"
+    },
+    {
+      "code": 6059,
+      "name": "InvalidOutputBalance",
+      "msg": "Invalid output balance"
+    },
+    {
+      "code": 6060,
+      "name": "UnexpectedPriceExponent",
+      "msg": "Unexpected price exponent"
+    },
+    {
+      "code": 6061,
+      "name": "OracleNotApproved",
+      "msg": "Oracle not approved"
+    },
+    {
+      "code": 6062,
+      "name": "InvalidFee",
+      "msg": "Invalid fee"
+    },
+    {
+      "code": 6063,
+      "name": "MaxAssetCountExceeded",
+      "msg": "Max asset count exceeded"
+    },
+    {
+      "code": 6064,
+      "name": "NoTradesYet",
+      "msg": "No trades yet"
+    },
+    {
+      "code": 6065,
+      "name": "InvalidPendingAdmin",
+      "msg": "Invalid pending admin"
+    },
+    {
+      "code": 6066,
+      "name": "InvalidPrice",
+      "msg": "Invalid price"
+    },
+    {
+      "code": 6067,
+      "name": "ZeroWithdrawShares",
+      "msg": "Zero withdraw shares"
+    },
+    {
+      "code": 6068,
+      "name": "SlippageExceeded",
+      "msg": "Slippage exceeded"
+    },
+    {
+      "code": 6069,
+      "name": "InvalidBps",
+      "msg": "Invalid bps"
+    },
+    {
+      "code": 6070,
+      "name": "InvalidTradingDelegate",
+      "msg": "Invalid trading delegate"
+    },
+    {
+      "code": 6071,
+      "name": "NoTradingDelegate",
+      "msg": "Vault has no trading delegate"
+    },
+    {
+      "code": 6072,
+      "name": "UnauthorizedTrader",
+      "msg": "Signer is not authorized to trade this vault"
+    }
+  ],
+  "types": [
+    {
+      "name": "AdminPool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "Bump to identify PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "operator",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool_count",
+            "type": "u64"
+          },
+          {
+            "name": "creation_fee",
+            "type": "u64"
+          },
+          {
+            "name": "protocol_performance_fee",
+            "type": "u16"
+          },
+          {
+            "name": "protocol_money_management_fee",
+            "type": "u16"
+          },
+          {
+            "name": "money_management_yearly_fee_max",
+            "type": "u16"
+          },
+          {
+            "name": "performance_fee_max",
+            "type": "u16"
+          },
+          {
+            "name": "trading_fee",
+            "type": "u64"
+          },
+          {
+            "name": "withdraw_cooldown_max",
+            "type": "u64"
+          },
+          {
+            "name": "fundrising_period_max",
+            "type": "u64"
+          },
+          {
+            "name": "raise_amount_min_usd",
+            "type": "u64"
+          },
+          {
+            "name": "contribution_amount_min_usd",
+            "type": "u64"
+          },
+          {
+            "name": "oracle_max_age",
+            "type": "u64"
+          },
+          {
+            "name": "idle_period",
+            "type": "u64"
+          },
+          {
+            "name": "dust_threshold_usd",
+            "type": "u64"
+          },
+          {
+            "name": "max_asset_count",
+            "type": "u16"
+          },
+          {
+            "name": "max_slippage_bps",
+            "type": "u16"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u8",
+                62
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolAcceptOwnershipEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "old_admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_admin",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolCreatedEvent",
+      "docs": [
+        "Emitted when a pool is created and initialized with a starting price",
+        ""
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "operator",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool_count",
+            "type": "u64"
+          },
+          {
+            "name": "creation_fee",
+            "type": "u64"
+          },
+          {
+            "name": "protocol_performance_fee",
+            "type": "u16"
+          },
+          {
+            "name": "protocol_money_management_fee",
+            "type": "u16"
+          },
+          {
+            "name": "trading_fee",
+            "type": "u64"
+          },
+          {
+            "name": "money_management_yearly_fee_max",
+            "type": "u16"
+          },
+          {
+            "name": "performance_fee_max",
+            "type": "u16"
+          },
+          {
+            "name": "withdraw_cooldown_max",
+            "type": "u64"
+          },
+          {
+            "name": "fundrising_period_max",
+            "type": "u64"
+          },
+          {
+            "name": "raise_amount_min_usd",
+            "type": "u64"
+          },
+          {
+            "name": "contribution_amount_min_usd",
+            "type": "u64"
+          },
+          {
+            "name": "oracle_max_age",
+            "type": "u64"
+          },
+          {
+            "name": "idle_period",
+            "type": "u64"
+          },
+          {
+            "name": "dust_threshold_usd",
+            "type": "u64"
+          },
+          {
+            "name": "max_asset_count",
+            "type": "u16"
+          },
+          {
+            "name": "max_slippage_bps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolModifyFeeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "creation_fee",
+            "type": "u64"
+          },
+          {
+            "name": "protocol_performance_fee",
+            "type": "u16"
+          },
+          {
+            "name": "protocol_money_management_fee",
+            "type": "u16"
+          },
+          {
+            "name": "trading_fee",
+            "type": "u64"
+          },
+          {
+            "name": "money_management_yearly_fee_max",
+            "type": "u16"
+          },
+          {
+            "name": "performance_fee_max",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolTransferOwnershipEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "pending_admin",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateContributionAmountMinUsdEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_contribution_amount_min_usd",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateDustThresholdUsdEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_dust_threshold_usd",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateFundrisingPeriodMaxEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_fundrising_period_max",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateIdlePeriodEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_idle_period",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateMaxAssetCountEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_max_asset_count",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateMaxSlippageBpsEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_max_slippage_bps",
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateOperatorEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_operator",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateOracleMaxAgeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_oracle_max_age",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateRaiseAmountMinUsdEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_raise_amount_min_usd",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AdminPoolUpdateWithdrawCooldownMaxEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin",
+            "type": "pubkey"
+          },
+          {
+            "name": "new_withdraw_cooldown_max",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ApproveOraclePoolEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AssetAddedEvent",
+      "docs": [
+        "Event emitted when an asset is added to the vault"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "asset_registry",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_assets",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AssetRegistry",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "Bump to identify PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "vault_pool",
+            "docs": [
+              "Reference to the vault pool this registry belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "asset_mints",
+            "docs": [
+              "Dynamic list of asset mints in the vault"
+            ],
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u64",
+                8
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "AssetRemovedEvent",
+      "docs": [
+        "Event emitted when an asset is removed from the vault"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "asset_registry",
+            "type": "pubkey"
+          },
+          {
+            "name": "mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "total_assets",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CloseOraclePoolEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "oracle_pool",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CloseVaultEvent",
+      "docs": [
+        "Emitted when a pool is created and initialized with a starting price",
+        ""
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "status",
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreateOraclePoolEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "feed_id",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DepositTokenFundEvent",
+      "docs": [
+        "Emitted when a pool is created and initialized with a starting price",
+        ""
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "investor",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "investor_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "amount_usd",
+            "type": "u64"
+          },
+          {
+            "name": "shares",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "InvestorPool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "Bump to identify PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "investor",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "shares",
+            "type": "u64"
+          },
+          {
+            "name": "hight_watermark",
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "type": "u64"
+          },
+          {
+            "name": "updated_at",
+            "type": "u64"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u64",
+                8
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "InvestorPoolCreatedEvent",
+      "docs": [
+        "Emitted when a pool is created and initialized with a starting price",
+        ""
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "investor",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "created_at",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "MoneyManagerPool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "Bump to identify PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "vaults_amount",
+            "type": "u64"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u64",
+                8
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "MoneyManagerPoolCreatedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "OraclePool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "Bump to identify PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "admin_pool",
+            "docs": [
+              "The block timestamp of the observation"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "feed_id",
+            "type": {
+              "array": [
+                "u8",
+                66
+              ]
+            }
+          },
+          {
+            "name": "is_approved",
+            "type": "bool"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u64",
+                8
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "PriceFeedMessage",
+      "repr": {
+        "kind": "c"
+      },
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "feed_id",
+            "docs": [
+              "`FeedId` but avoid the type alias because of compatibility issues with Anchor's `idl-build` feature."
+            ],
+            "type": {
+              "array": [
+                "u8",
+                32
+              ]
+            }
+          },
+          {
+            "name": "price",
+            "type": "i64"
+          },
+          {
+            "name": "conf",
+            "type": "u64"
+          },
+          {
+            "name": "exponent",
+            "type": "i32"
+          },
+          {
+            "name": "publish_time",
+            "docs": [
+              "The timestamp of this price update in seconds"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "prev_publish_time",
+            "docs": [
+              "The timestamp of the previous price update. This field is intended to allow users to",
+              "identify the single unique price update for any moment in time:",
+              "for any time t, the unique update is the one such that prev_publish_time < t <= publish_time.",
+              "",
+              "Note that there may not be such an update while we are migrating to the new message-sending logic,",
+              "as some price updates on pythnet may not be sent to other chains (because the message-sending",
+              "logic may not have triggered). We can solve this problem by making the message-sending mandatory",
+              "(which we can do once publishers have migrated over).",
+              "",
+              "Additionally, this field may be equal to publish_time if the message is sent on a slot where",
+              "where the aggregation was unsuccesful. This problem will go away once all publishers have",
+              "migrated over to a recent version of pyth-agent."
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "ema_price",
+            "type": "i64"
+          },
+          {
+            "name": "ema_conf",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PriceUpdateV2",
+      "docs": [
+        "A price update account. This account is used by the Pyth Receiver program to store a verified price update from a Pyth price feed.",
+        "It contains:",
+        "- `write_authority`: The write authority for this account. This authority can close this account to reclaim rent or update the account to contain a different price update.",
+        "- `verification_level`: The [`VerificationLevel`] of this price update. This represents how many Wormhole guardian signatures have been verified for this price update.",
+        "- `price_message`: The actual price update.",
+        "- `posted_slot`: The slot at which this price update was posted."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "write_authority",
+            "type": "pubkey"
+          },
+          {
+            "name": "verification_level",
+            "type": {
+              "defined": {
+                "name": "VerificationLevel"
+              }
+            }
+          },
+          {
+            "name": "price_message",
+            "type": {
+              "defined": {
+                "name": "PriceFeedMessage"
+              }
+            }
+          },
+          {
+            "name": "posted_slot",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TradingDelegateRevokedEvent",
+      "docs": [
+        "Emitted when a money manager revokes their vault's trading delegate."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "previous_delegate",
+            "docs": [
+              "The delegate that was just revoked."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TradingDelegateSetEvent",
+      "docs": [
+        "Emitted when a money manager authorizes a trading delegate for their vault."
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "trading_delegate",
+            "type": "pubkey"
+          },
+          {
+            "name": "previous_delegate",
+            "docs": [
+              "Previous delegate, or all-zeros when none was set. Lets the listener",
+              "mirror a re-point (delegate A -> delegate B) without re-reading chain."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "timestamp",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "TradingEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "docs": [
+              "The vault's money manager, always read from `VaultPool` state rather",
+              "than from whoever signed. Points, PnL and fee attribution key off this,",
+              "so it stays the real manager even when a delegate executed the trade."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "input_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "input_mint_decimals",
+            "type": "u8"
+          },
+          {
+            "name": "output_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "output_mint_decimals",
+            "type": "u8"
+          },
+          {
+            "name": "input_amount",
+            "type": "u64"
+          },
+          {
+            "name": "output_amount",
+            "type": "u64"
+          },
+          {
+            "name": "trader",
+            "docs": [
+              "Who actually signed this trade — the money manager, or the vault's",
+              "trading delegate. Appended last so existing field offsets are unchanged.",
+              "",
+              "Without this, a delegate-signed trade and a manager-signed trade are",
+              "indistinguishable in our records: if a delegate key were compromised we",
+              "could not say which trades were the attacker's, and a manager disputing",
+              "a trade could neither be confirmed nor refuted."
+            ],
+            "type": "pubkey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "UpdateOraclePoolEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "feed_id",
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultCreatedEvent",
+      "docs": [
+        "Emitted when a pool is created and initialized with a starting price",
+        ""
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "index",
+            "type": "u64"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "min_contribute_amount_usd",
+            "docs": [
+              "Minimum contribution amount"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "raise_period",
+            "type": "u64"
+          },
+          {
+            "name": "min_raise_amount_usd",
+            "type": "u64"
+          },
+          {
+            "name": "mm_withdraw_period",
+            "type": "u64"
+          },
+          {
+            "name": "withdraw_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "type": "u64"
+          },
+          {
+            "name": "money_management_yearly_fee",
+            "type": "u16"
+          },
+          {
+            "name": "performance_fee",
+            "type": "u16"
+          },
+          {
+            "name": "price",
+            "type": "i64"
+          },
+          {
+            "name": "price_exponent",
+            "type": "i32"
+          },
+          {
+            "name": "is_open_ended",
+            "type": "bool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VaultPool",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "bump",
+            "docs": [
+              "Bump to identify PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "index",
+            "type": "u64"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "asset_registry",
+            "docs": [
+              "Reference to the asset registry for this vault"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool_status",
+            "type": "u8"
+          },
+          {
+            "name": "investor_count",
+            "type": "u64"
+          },
+          {
+            "name": "raised_amount_usd",
+            "type": "u64"
+          },
+          {
+            "name": "total_shares",
+            "type": "u64"
+          },
+          {
+            "name": "min_contribute_amount_usd",
+            "docs": [
+              "Minimum contribution amount"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "raise_period",
+            "type": "u64"
+          },
+          {
+            "name": "min_raise_amount_usd",
+            "type": "u64"
+          },
+          {
+            "name": "mm_withdraw_period",
+            "type": "u64"
+          },
+          {
+            "name": "withdraw_cooldown",
+            "type": "u64"
+          },
+          {
+            "name": "created_at",
+            "type": "u64"
+          },
+          {
+            "name": "updated_at",
+            "type": "u64"
+          },
+          {
+            "name": "last_trade_at",
+            "type": "u64"
+          },
+          {
+            "name": "last_mm_fee_withdraw_at",
+            "type": "u64"
+          },
+          {
+            "name": "money_management_yearly_fee",
+            "type": "u16"
+          },
+          {
+            "name": "performance_fee",
+            "type": "u16"
+          },
+          {
+            "name": "is_open_ended",
+            "type": "bool"
+          },
+          {
+            "name": "padding1",
+            "type": {
+              "array": [
+                "u8",
+                7
+              ]
+            }
+          },
+          {
+            "name": "trading_delegate",
+            "docs": [
+              "Optional second key allowed to trade this vault — and only trade.",
+              "",
+              "Carved out of the head of `padding`, so the account's total size is",
+              "unchanged and **existing vaults need no realloc or migration**. Every",
+              "live account already holds zeroes here (verified against all 178 on-chain",
+              "`VaultPool`s), so they decode as \"no delegate\" the moment this ships.",
+              "",
+              "All-zeros is the disabled sentinel rather than `Option<Pubkey>`: an",
+              "`Option` prefixes a discriminant byte and shifts every following field,",
+              "which would force exactly the migration this layout avoids."
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "padding",
+            "type": {
+              "array": [
+                "u64",
+                11
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "VerificationLevel",
+      "docs": [
+        "Pyth price updates are bridged to all blockchains via Wormhole.",
+        "Using the price updates on another chain requires verifying the signatures of the Wormhole guardians.",
+        "The usual process is to check the signatures for two thirds of the total number of guardians, but this can be cumbersome on Solana because of the transaction size limits,",
+        "so we also allow for partial verification.",
+        "",
+        "This enum represents how much a price update has been verified:",
+        "- If `Full`, we have verified the signatures for two thirds of the current guardians.",
+        "- If `Partial`, only `num_signatures` guardian signatures have been checked.",
+        "",
+        "# Warning",
+        "Using partially verified price updates is dangerous, as it lowers the threshold of guardians that need to collude to produce a malicious price update."
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Partial",
+            "fields": [
+              {
+                "name": "num_signatures",
+                "type": "u8"
+              }
+            ]
+          },
+          {
+            "name": "Full"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawMoneyManagementFeeEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "fee_amount",
+            "type": "u64"
+          },
+          {
+            "name": "admin_fee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawTokenFundEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "investor",
+            "type": "pubkey"
+          },
+          {
+            "name": "investor_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_mint",
+            "type": "pubkey"
+          },
+          {
+            "name": "token_price",
+            "type": "i64"
+          },
+          {
+            "name": "token_exponent",
+            "type": "i32"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "money_manager_fee",
+            "type": "u64"
+          },
+          {
+            "name": "performance_fee",
+            "type": "u64"
+          },
+          {
+            "name": "admin_fee",
+            "type": "u64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "WithdrawTokenFundResultEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "investor",
+            "type": "pubkey"
+          },
+          {
+            "name": "money_manager",
+            "type": "pubkey"
+          },
+          {
+            "name": "admin_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "investor_pool",
+            "type": "pubkey"
+          },
+          {
+            "name": "vault_prev_value",
+            "type": "u64"
+          },
+          {
+            "name": "vault_updated_value",
+            "type": "u64"
+          },
+          {
+            "name": "investor_prev_value",
+            "type": "u64"
+          },
+          {
+            "name": "investor_updated_value",
+            "type": "u64"
+          }
+        ]
+      }
+    }
+  ]
+}

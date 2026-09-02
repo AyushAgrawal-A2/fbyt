@@ -1,0 +1,52 @@
+[package]
+name = "fbyt_vault"
+version = "0.1.0"
+description = "Created with Anchor"
+edition.workspace = true
+rust-version.workspace = true
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "fbyt_vault"
+
+[features]
+default = []
+cpi = ["no-entrypoint"]
+no-entrypoint = []
+no-log-ix-name = []
+idl-build = ["anchor-lang/idl-build", "anchor-spl/idl-build"]
+anchor-debug = []
+custom-heap = []
+custom-panic = []
+
+
+[dependencies]
+anchor-lang = { version = "1.1.2", features = ["init-if-needed"] }
+anchor-spl = "1.1.2"
+# `pro-compatible` selects the Pyth receiver the DEPLOYED program uses
+# (rec2HHDD…, verified via differential test) instead of the default rec5EKMG…
+pyth-solana-receiver-sdk = { version = "2.0.0", features = ["pro-compatible"] }
+
+# LiteSVM integration-test harness (see tests/). These are dev-only: `anchor build`
+# compiles only the lib (SBF + IDL host build), never dev-deps, so they don't reach the
+# on-chain program. litesvm pulls granular solana-4.x crates (no `solana-program`), which
+# coexist with the program's pinned deps; host tests run on the repo's Rust 1.98 toolchain.
+[dev-dependencies]
+litesvm = "0.16"
+solana-keypair = "3"
+solana-signer = "3"
+solana-address = "2"
+solana-instruction = "3"
+solana-transaction = "4"
+solana-message = "4"
+solana-account = "4"
+solana-hash = "4"
+solana-native-token = "3"
+solana-clock = "3"
+solana-sdk-ids = "3"
+borsh = "1"
+sha2 = "0.10"
+
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(target_os, values("solana"))'] }

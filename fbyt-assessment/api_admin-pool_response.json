@@ -1,0 +1,23 @@
+{
+  "address": "8D4fE8ijbjTC1n5nA1Tmqzkm5CAjryBxbQwrkZ7A1kLE",
+  "adminAddress": "FWK5K9x7YCDRGj24LdUR3DZBnfFBeT8Tfp9XX6YB3UaL",
+  "pendingAdmin": "11111111111111111111111111111111",
+  "creationFee": "2000000",
+  "protocolPerformanceFee": "2000",
+  "protocolMoneyManagementFee": "2000",
+  "moneyManagementFeeMax": "1500",
+  "performanceFeeMax": "2000",
+  "tradingFee": "1000000",
+  "maxFundRaisingPeriod": "2592000",
+  "maxCooldownPeriod": "3888000",
+  "minRaiseAmount": "10000",
+  "minContributionAmount": "10000",
+  "idleLimitPeriod": "7776000",
+  "operator": "27y3HZuEayKZQv4uxpLuSrgNqYapMEk34kBAU12Cjqxu",
+  "oracleMaxAge": "259200",
+  "dustThresholdUsd": "10000",
+  "maxAssetCount": 30,
+  "maxSlippageBps": 1000,
+  "createdAt": null,
+  "updatedAt": null
+}
