@@ -90,7 +90,7 @@ const le = (v: number | bigint, n: number) => {
 async function setAccount(pubkey: Address, data: Uint8Array, owner: Address, lamports = 5_000_000) {
   await rpc('surfnet_setAccount', [
     pubkey,
-    { lamports, data: Array.from(data), owner, executable: false, rent_epoch: 0 },
+    { lamports, data: Buffer.from(data).toString('hex'), owner, executable: false, rent_epoch: 0 },
   ]);
 }
 function feed32(hex: string): Uint8Array {
@@ -116,14 +116,22 @@ async function main() {
   const deployer = execSync(`solana-keygen pubkey ${deployerPath}`).toString().trim() as Address;
   await rpc('surfnet_setAccount', [deployer, { lamports: 100_000_000_000 }]);
 
-  // 1. deploy the reconstructed program
-  console.log('deploying program…');
-  execSync(
-    `solana program deploy ${repoRoot}/target/deploy/fbyt_vault.so ` +
-      `--program-id ${repoRoot}/target/deploy/fbyt_vault-keypair.json ` +
-      `--keypair ${deployerPath} --url ${RPC_URL} --commitment confirmed`,
-    { stdio: 'inherit' },
-  );
+  // 1. deploy the reconstructed program (skip if already on the surfnet)
+  const existing = await rpc<{ value: { executable: boolean } | null }>('getAccountInfo', [
+    PROGRAM_ID,
+    { encoding: 'base64' },
+  ]);
+  if (existing?.value?.executable) {
+    console.log('program already deployed, skipping');
+  } else {
+    console.log('deploying program…');
+    execSync(
+      `solana program deploy ${repoRoot}/target/deploy/fbyt_vault.so ` +
+        `--program-id ${repoRoot}/target/deploy/fbyt_vault-keypair.json ` +
+        `--keypair ${deployerPath} --url ${RPC_URL} --commitment confirmed`,
+      { stdio: 'inherit' },
+    );
+  }
 
   // fixed demo actor pubkeys (no signing needed — everything is injected)
   const admin = deployer;
