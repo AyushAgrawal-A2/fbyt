@@ -29,3 +29,14 @@ export const TOKEN_2022_PROGRAM_ID: Address = address('TokenzQdBNbLqP5VEhdkAS6EP
 
 /** USD amounts on-chain are micro-USD (6 dp). */
 export const USD_DECIMALS = 6;
+
+/**
+ * Demo tradeable output asset seeded by `pnpm bootstrap` on the local surfnet. The manager UI trades
+ * the vault's base token into this asset through the bundled jupiter-mock cloned at {@link JUPITER_PROGRAM_ID}.
+ * `DEMO_OUT_MINT` is derived (PDA of the program) so it is always a valid address; its Pyth feed id and
+ * the mock's liquidity pool seed are fixed so bootstrap, the dev-advance route, and the UI agree.
+ */
+export const DEMO_OUT_MINT_SEED = 'demo-out-mint';
+export const DEMO_OUT_FEED_HEX =
+  '2222222222222222222222222222222222222222222222222222222222222222';
+export const JUPITER_POOL_SEED = 'pool';

@@ -11,7 +11,14 @@ import {
   findInvestorPoolPda,
   findAssetRegistryPda,
 } from '@/generated';
-import { FBYT_PROGRAM_ID, TOKEN_PROGRAM_ID } from './config';
+import {
+  FBYT_PROGRAM_ID,
+  TOKEN_PROGRAM_ID,
+  JUPITER_PROGRAM_ID,
+  JUPITER_POOL_SEED,
+  DEMO_OUT_MINT_SEED,
+  DEMO_OUT_FEED_HEX,
+} from './config';
 
 const addrEnc = getAddressEncoder();
 const u64Enc = getU64Encoder();
@@ -83,4 +90,35 @@ export async function vaultPoolAddress(
 export async function assetRegistryAddress(vaultPool: Address): Promise<Address> {
   const [pda] = await findAssetRegistryPda({ vaultPool }, { programAddress: FBYT_PROGRAM_ID });
   return pda;
+}
+
+/** 32-byte Pyth feed id from an ASCII-hex string (no `0x`). */
+export function feed32FromHex(hex: string): Uint8Array {
+  const clean = hex.replace(/^0x/, '');
+  const out = new Uint8Array(32);
+  for (let i = 0; i < 32; i++) out[i] = parseInt(clean.slice(i * 2, i * 2 + 2), 16);
+  return out;
+}
+
+/** The demo output mint seeded on localnet (PDA of the program — always a valid address). */
+export async function demoOutMint(): Promise<Address> {
+  const [pda] = await getProgramDerivedAddress({
+    programAddress: FBYT_PROGRAM_ID,
+    seeds: [new TextEncoder().encode(DEMO_OUT_MINT_SEED)],
+  });
+  return pda;
+}
+
+/** The jupiter-mock's liquidity-pool authority PDA (`[pool]` under the Jupiter id). */
+export async function jupiterPoolPda(): Promise<Address> {
+  const [pda] = await getProgramDerivedAddress({
+    programAddress: JUPITER_PROGRAM_ID,
+    seeds: [new TextEncoder().encode(JUPITER_POOL_SEED)],
+  });
+  return pda;
+}
+
+/** Canonical Pyth price account for the demo output asset's feed. */
+export function demoOutPriceAccount(): Promise<Address> {
+  return canonicalPriceAccount(feed32FromHex(DEMO_OUT_FEED_HEX));
 }

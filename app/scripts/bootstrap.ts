@@ -44,8 +44,13 @@ const PYTH_RECEIVER = address('rec2HHDDnjLfj4kE7VyEtFA1HPGQLK33259532cRyHp');
 const PYTH_PUSH_ORACLE = address('pyt2F414BA6dPttK6RddPZUdHfapoBN24GL5wbrPCou');
 const TOKEN_PROGRAM = address('TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA');
 const BPF_LOADER_UPGRADEABLE = address('BPFLoaderUpgradeab1e11111111111111111111111');
+const JUPITER = address('JUP6LkbZbjS1jKKwapdHNy74zcZ3tLUZoi5QNyVTaV4');
 // Base-token Pyth feed for the demo vault (an arbitrary 32-byte id — the injected price uses it too).
 const DEMO_FEED = 'ef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d';
+// Demo tradeable output asset (see src/lib/config.ts — the UI trades base -> this via the jupiter-mock).
+const DEMO_OUT_MINT_SEED = 'demo-out-mint';
+const DEMO_OUT_FEED = '2222222222222222222222222222222222222222222222222222222222222222';
+const JUPITER_POOL_SEED = 'pool';
 const BASE_TIME = 1_900_000_000; // a fixed "now" we time-travel the clock to
 const addrEnc = getAddressEncoder();
 const u64Enc = getU64Encoder();
@@ -104,6 +109,33 @@ function feedId66(hex: string): Uint8Array {
   out.set(s.slice(0, 66));
   return out;
 }
+async function injectMint(mint: Address, decimals: number, authority: Address) {
+  const d = bytes(le(1, 4), addrEnc.encode(authority), le(0, 8), [decimals], [1], le(0, 4));
+  await setAccount(mint, bytes(d, new Uint8Array(82 - d.length)), TOKEN_PROGRAM, 2_000_000);
+}
+/** Write a fresh Pyth PriceUpdateV2 ($price at expo -8) at the canonical account for `feedHex`. */
+async function injectPrice(feedHex: string, priceMicro: bigint, publishTime: number): Promise<Address> {
+  const [acct] = await getProgramDerivedAddress({
+    programAddress: PYTH_PUSH_ORACLE,
+    seeds: [new Uint8Array([0, 0]), feed32(feedHex)],
+  });
+  const data = bytes(
+    acctDisc('PriceUpdateV2'),
+    new Uint8Array(32),
+    [1],
+    feed32(feedHex),
+    le(priceMicro, 8),
+    le(1n, 8),
+    le(0xfffffff8, 4),
+    le(publishTime, 8),
+    le(publishTime, 8),
+    le(priceMicro, 8),
+    le(1n, 8),
+    le(0n, 8),
+  );
+  await setAccount(acct, data, PYTH_RECEIVER);
+  return acct;
+}
 
 async function main() {
   // 0. deployer keypair + funding
@@ -133,10 +165,16 @@ async function main() {
     );
   }
 
-  // fixed demo actor pubkeys (no signing needed — everything is injected)
+  // demo actors. admin/operator = deployer. The money manager is a saved keypair so scripts (trade,
+  // fee) can sign as it against the demo vault.
   const admin = deployer;
   const operator = deployer;
-  const moneyManager = address('4Nd1mDMkBQ2fJctxxu5xgQXcv7uxDvsWtUxu5b8bYh4z'); // arbitrary demo manager
+  const managerPath = join(keysDir, 'manager.json');
+  if (!existsSync(managerPath)) {
+    execSync(`solana-keygen new --no-bip39-passphrase --silent -o ${managerPath}`, { stdio: 'ignore' });
+  }
+  const moneyManager = execSync(`solana-keygen pubkey ${managerPath}`).toString().trim() as Address;
+  await rpc('surfnet_setAccount', [moneyManager, { lamports: 10_000_000_000 }]);
 
   // 2. admin pool (matches the deployed protocol config)
   const [adminPool, adminBump] = await findAdminPoolPda({ programAddress: PROGRAM_ID });
@@ -296,10 +334,46 @@ async function main() {
   });
   await rpc('surfnet_setTokenAccount', [vaultPool, mint, { amount: 0 }]).catch(() => {});
 
-  // 8. put the clock inside the raise window so deposits are accepted
-  await rpc('surfnet_timeTravel', [{ absolute_timestamp: BASE_TIME + 1000 }]).catch(() =>
-    rpc('surfnet_timeTravel', [{ unix_timestamp: BASE_TIME + 1000 }]).catch(() => {}),
+  // 8. trade prerequisites: clone the bundled jupiter-mock at the Jupiter id and seed a demo output
+  // asset (mint + approved oracle + fresh price) with counterparty liquidity, so the manager UI can
+  // trade the vault's base token into it once the vault is past its fundraise.
+  // A mainnet-fork surfnet lazily clones the *real* Jupiter program at this id, so always overwrite it
+  // with the local mock (deploy to a throwaway id, then clone its bytecode onto the Jupiter id).
+  const mockSo = `${repoRoot}/programs/fbyt_vault/tests/jupiter-mock/target/deploy/jupiter_mock.so`;
+  if (existsSync(mockSo)) {
+    console.log('cloning jupiter-mock at the Jupiter id…');
+    const tmpKp = join(keysDir, 'jupmock.json');
+    execSync(`solana-keygen new --no-bip39-passphrase --silent --force -o ${tmpKp}`, { stdio: 'ignore' });
+    const tmpId = execSync(`solana-keygen pubkey ${tmpKp}`).toString().trim();
+    execSync(
+      `solana program deploy ${mockSo} --program-id ${tmpKp} --keypair ${deployerPath} --url ${RPC_URL} --commitment confirmed`,
+      { stdio: 'ignore' },
+    );
+    await rpc('surfnet_cloneProgramAccount', [tmpId, String(JUPITER)]);
+  } else {
+    console.log('jupiter-mock .so not built; skipping (trade UI will be unavailable)');
+  }
+
+  const [outMint] = await getProgramDerivedAddress({
+    programAddress: PROGRAM_ID,
+    seeds: [new TextEncoder().encode(DEMO_OUT_MINT_SEED)],
+  });
+  await injectMint(outMint, 6, admin);
+  const [outOracle, outOracleBump] = await findOraclePoolPda({ adminPool, tokenMint: outMint }, { programAddress: PROGRAM_ID });
+  await setAccount(
+    outOracle,
+    new Uint8Array(getOraclePoolEncoder().encode({ bump: outOracleBump, adminPool, tokenMint: outMint, feedId: feedId66(DEMO_OUT_FEED), isApproved: true, padding: Array(8).fill(0n), reserved: new Uint8Array(4) })),
+    PROGRAM_ID,
   );
+  await injectPrice(DEMO_OUT_FEED, 100_000_000n, BASE_TIME);
+  // counterparty: the mock's pool authority holds output liquidity and receives the vault's input.
+  const [poolPda] = await getProgramDerivedAddress({ programAddress: JUPITER, seeds: [new TextEncoder().encode(JUPITER_POOL_SEED)] });
+  await rpc('surfnet_setTokenAccount', [poolPda, outMint, { amount: 1_000_000_000 }]).catch(() => {});
+  await rpc('surfnet_setTokenAccount', [poolPda, mint, { amount: 0 }]).catch(() => {});
+  await rpc('surfnet_setTokenAccount', [vaultPool, outMint, { amount: 0 }]).catch(() => {});
+
+  // 9. put the clock inside the raise window so deposits are accepted (ms since epoch)
+  await rpc('surfnet_timeTravel', [{ absoluteTimestamp: (BASE_TIME + 1000) * 1000 }]).catch(() => {});
 
   console.log('\nbootstrap complete:');
   console.log('  admin pool   ', adminPool);
@@ -308,7 +382,9 @@ async function main() {
   console.log('  price account', priceAcct);
   console.log('  demo vault   ', vaultPool);
   console.log('  vault ATA    ', vaultAta);
+  console.log('  demo out mint', outMint);
   console.log('\nFund a wallet with demo tokens:  POST /api/faucet { address, mint }');
+  console.log('Advance a vault to its trading phase:  POST /api/dev/advance { vault }');
 }
 
 main().catch((e) => {
