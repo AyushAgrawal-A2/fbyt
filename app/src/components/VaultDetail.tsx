@@ -52,6 +52,16 @@ export function VaultDetail({ address }: { address: string }) {
     fetch(`/api/vaults/${address}/metadata`).then((r) => r.json()).then((j) => j.metadata as { name?: string; description?: string; strategy?: string } | null),
   );
 
+  type NavData = {
+    navMicroUsd: string;
+    raisedMicroUsd: string;
+    pnlBps: number;
+    holdings: Array<{ mint: string; amount: string; decimals: number; priceUsd: number; valueMicroUsd: string }>;
+  };
+  const { data: nav } = useSWR(['nav', address], () =>
+    fetch(`/api/vaults/${address}/nav`).then((r) => (r.ok ? (r.json() as Promise<NavData>) : null)),
+  );
+
   const mintAddr = vault?.exists ? vault.data.tokenMint : undefined;
   const { data: mint } = useSWR(mintAddr ? ['mint', mintAddr] : null, () =>
     fetchMint(client.rpc, mintAddr!),
@@ -203,6 +213,45 @@ export function VaultDetail({ address }: { address: string }) {
           <Stat label="Manager" value={shortAddress(String(d.moneyManager), 5, 5)} />
           <Stat label="Open-ended" value={d.isOpenEnded ? 'Yes' : 'No'} />
         </div>
+
+        <div className="card mt-4 p-5">
+          <div className="mb-3 flex items-center justify-between">
+            <h2 className="font-semibold">Portfolio</h2>
+            {nav ? (
+              <span className={`text-sm ${nav.pnlBps >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                {nav.pnlBps >= 0 ? '+' : ''}
+                {(nav.pnlBps / 100).toFixed(2)}% vs raised
+              </span>
+            ) : null}
+          </div>
+          {!nav ? (
+            <p className="text-sm opacity-50">Valuing holdings…</p>
+          ) : (
+            <>
+              <div className="mb-3 grid grid-cols-3 gap-2">
+                <Stat label="NAV" value={formatMicroUsd(BigInt(nav.navMicroUsd))} />
+                <Stat label="Raised" value={formatMicroUsd(BigInt(nav.raisedMicroUsd))} />
+                <Stat
+                  label="NAV / share"
+                  value={d.totalShares > 0n ? formatMicroUsd(BigInt(nav.navMicroUsd) / d.totalShares) : '—'}
+                />
+              </div>
+              {nav.holdings.length === 0 ? (
+                <p className="text-sm opacity-50">No assets held yet.</p>
+              ) : (
+                <div className="space-y-1">
+                  {nav.holdings.map((h) => (
+                    <div key={h.mint} className="flex items-center justify-between text-sm">
+                      <span className="font-mono opacity-70">{shortAddress(h.mint, 5, 5)}</span>
+                      <span className="opacity-60">{formatTokenAmount(BigInt(h.amount), h.decimals)}</span>
+                      <span className="font-medium">{formatMicroUsd(BigInt(h.valueMicroUsd))}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </section>
 
       <aside className="space-y-4">
@@ -216,6 +265,12 @@ export function VaultDetail({ address }: { address: string }) {
                 <span className="opacity-60">Shares:</span>{' '}
                 {position.data.shares.toLocaleString()}
               </p>
+              {nav && d.totalShares > 0n ? (
+                <p className="text-sm">
+                  <span className="opacity-60">Value:</span>{' '}
+                  {formatMicroUsd((BigInt(nav.navMicroUsd) * position.data.shares) / d.totalShares)}
+                </p>
+              ) : null}
               <button
                 className="btn btn-ghost mt-3 w-full"
                 disabled={redeem.isRunning}

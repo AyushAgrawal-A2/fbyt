@@ -1,22 +1,36 @@
 import Link from 'next/link';
 import { serverRpc } from '@/lib/rpc-server';
-import { fetchVaults, sortVaults, type VaultSummary } from '@/lib/vaults';
+import { fetchVaults, type VaultSummary } from '@/lib/vaults';
 import { getAllMetadata, type VaultMetadata } from '@/lib/metadataStore';
+import { computeNav, type Nav } from '@/lib/nav';
 import { formatBps, formatMicroUsd, shortAddress, vaultStatusLabel } from '@/lib/format';
 import { RPC_URL } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
-async function loadVaults(): Promise<{ vaults?: VaultSummary[]; meta?: Record<string, VaultMetadata>; error?: string }> {
+async function loadVaults(): Promise<{ vaults?: VaultSummary[]; meta?: Record<string, VaultMetadata>; navs?: Record<string, Nav>; error?: string }> {
   try {
-    const [vaults, meta] = await Promise.all([fetchVaults(serverRpc()).then(sortVaults), getAllMetadata()]);
-    return { vaults, meta };
+    const [vaults, meta] = await Promise.all([fetchVaults(serverRpc()), getAllMetadata()]);
+    // value every vault, then rank by NAV (falling back to capital raised)
+    const navs: Record<string, Nav> = {};
+    await Promise.all(
+      vaults.map(async (v) => {
+        const nav = await computeNav(v.address, RPC_URL).catch(() => null);
+        if (nav) navs[v.address] = nav;
+      }),
+    );
+    const ranked = [...vaults].sort((a, b) => {
+      const na = BigInt(navs[a.address]?.navMicroUsd ?? a.data.raisedAmountUsd.toString());
+      const nb = BigInt(navs[b.address]?.navMicroUsd ?? b.data.raisedAmountUsd.toString());
+      return Number(nb - na);
+    });
+    return { vaults: ranked, meta, navs };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }
 }
 
-function VaultCard({ v, meta }: { v: VaultSummary; meta?: VaultMetadata }) {
+function VaultCard({ v, meta, nav }: { v: VaultSummary; meta?: VaultMetadata; nav?: Nav }) {
   const d = v.data;
   const status = vaultStatusLabel(d.vaultPoolStatus);
   return (
@@ -27,8 +41,11 @@ function VaultCard({ v, meta }: { v: VaultSummary; meta?: VaultMetadata }) {
       </div>
       {meta?.strategy ? <div className="mt-0.5 text-xs opacity-50">{meta.strategy}</div> : null}
       <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
-        <Stat label="Raised" value={formatMicroUsd(d.raisedAmountUsd)} />
-        <Stat label="Shares" value={d.totalShares.toLocaleString()} />
+        <Stat label="NAV" value={nav ? formatMicroUsd(BigInt(nav.navMicroUsd)) : formatMicroUsd(d.raisedAmountUsd)} />
+        <Stat
+          label="PnL"
+          value={nav ? `${nav.pnlBps >= 0 ? '+' : ''}${(nav.pnlBps / 100).toFixed(2)}%` : '—'}
+        />
         <Stat label="Investors" value={d.investorCount.toString()} />
         <Stat label="Perf fee" value={formatBps(d.performanceFee)} />
       </div>
@@ -46,7 +63,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 export default async function Home() {
-  const { vaults, meta, error } = await loadVaults();
+  const { vaults, meta, navs, error } = await loadVaults();
 
   return (
     <div>
@@ -73,7 +90,7 @@ pnpm bootstrap`}
       ) : vaults && vaults.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {vaults.map((v) => (
-            <VaultCard key={v.address} v={v} meta={meta?.[v.address]} />
+            <VaultCard key={v.address} v={v} meta={meta?.[v.address]} nav={navs?.[v.address]} />
           ))}
         </div>
       ) : (
