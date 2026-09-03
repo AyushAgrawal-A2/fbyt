@@ -15,7 +15,8 @@
     "e2e:withdraw": "tsx scripts/e2e-withdraw.ts",
     "e2e:trade": "tsx scripts/e2e-trade.ts",
     "e2e:lifecycle": "tsx scripts/e2e-lifecycle.ts",
-    "e2e:fee": "tsx scripts/e2e-fee.ts"
+    "e2e:fee": "tsx scripts/e2e-fee.ts",
+    "e2e:admin": "tsx scripts/e2e-admin.ts"
   },
   "dependencies": {
     "@solana-program/token": "^0.16.1",

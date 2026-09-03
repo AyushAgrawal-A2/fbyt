@@ -5,6 +5,7 @@ const links = [
   { href: '/', label: 'Vaults' },
   { href: '/create', label: 'Create' },
   { href: '/portfolio', label: 'Portfolio' },
+  { href: '/admin', label: 'Admin' },
 ];
 
 export function Nav() {
