@@ -62,6 +62,11 @@ export function VaultDetail({ address }: { address: string }) {
     fetch(`/api/vaults/${address}/nav`).then((r) => (r.ok ? (r.json() as Promise<NavData>) : null)),
   );
 
+  type Trade = { signature: string; blockTime: number | null; inputMint: string; outputMint: string; inputAmount: string; outputAmount: string; inputDecimals: number; outputDecimals: number };
+  const { data: trades } = useSWR(['trades', address], () =>
+    fetch(`/api/vaults/${address}/trades`).then((r) => (r.ok ? r.json().then((j) => j.trades as Trade[]) : [])),
+  );
+
   const mintAddr = vault?.exists ? vault.data.tokenMint : undefined;
   const { data: mint } = useSWR(mintAddr ? ['mint', mintAddr] : null, () =>
     fetchMint(client.rpc, mintAddr!),
@@ -250,6 +255,29 @@ export function VaultDetail({ address }: { address: string }) {
                 </div>
               )}
             </>
+          )}
+        </div>
+
+        <div className="card mt-4 p-5">
+          <h2 className="mb-3 font-semibold">Recent trades</h2>
+          {!trades ? (
+            <p className="text-sm opacity-50">Loading trade history…</p>
+          ) : trades.length === 0 ? (
+            <p className="text-sm opacity-50">No trades yet.</p>
+          ) : (
+            <div className="space-y-1">
+              {trades.map((t) => (
+                <div key={t.signature} className="flex items-center justify-between text-sm">
+                  <span className="opacity-70">
+                    {formatTokenAmount(BigInt(t.inputAmount), t.inputDecimals)}{' '}
+                    <span className="font-mono opacity-50">{shortAddress(t.inputMint, 4, 4)}</span> →{' '}
+                    {formatTokenAmount(BigInt(t.outputAmount), t.outputDecimals)}{' '}
+                    <span className="font-mono opacity-50">{shortAddress(t.outputMint, 4, 4)}</span>
+                  </span>
+                  <span className="text-xs opacity-40">{t.blockTime ? formatUnix(BigInt(t.blockTime)) : '—'}</span>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </section>
