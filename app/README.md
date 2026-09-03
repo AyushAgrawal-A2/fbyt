@@ -84,6 +84,14 @@ pnpm keeper --db scripts/.keys/delegate.json   # DB mode: run every enabled bot 
                                                # recording each execution as an order
 ```
 
+The **production keeper is a Rust service** (`../keeper/`) that runs the same strategies but reuses the
+program's own `state`/`accounts`/`instruction` types for exact (de)serialization, and reads/writes the
+same file DB. The `pnpm keeper` (TypeScript) above is the lightweight alternative for quick local runs.
+
+```bash
+cd ../keeper && RPC_URL=http://127.0.0.1:8899 cargo run -- ../app/scripts/.keys/delegate.json --once
+```
+
 Strategies: **dca**, **rebalance** (trade toward a target weight), and **grid** (buy/sell across price
 steps, state persisted per bot). It values legs against the Pyth oracles and sends the same `swap` the UI
 does, signed by the delegate.

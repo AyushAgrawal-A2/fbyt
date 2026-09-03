@@ -2,7 +2,7 @@
 members = [
     "programs/*"
 ]
-exclude = ["programs/fbyt_vault/tests/jupiter-mock"]
+exclude = ["programs/fbyt_vault/tests/jupiter-mock", "keeper"]
 resolver = "2"
 
 [workspace.package]

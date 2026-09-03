@@ -67,7 +67,8 @@ a local faucet. See [`app/README.md`](./app/README.md) for setup and the run ste
   fees, and close vaults; a protocol-admin console onboards assets and manages config/roles. Off-chain
   it has an indexer with NAV/PnL history charts, live NAV/holdings/trade-history, signed vault profiles,
   SIWS session auth, user accounts with points/referrals, public manager profiles, a token-launch board
-  with image uploads, and a keeper + bots platform. Trading uses the bundled jupiter-mock on localnet and
+  with image uploads, and a keeper + bots platform (the production keeper is a **Rust** service in
+  `keeper/` that reuses the program's own state/accounts/instruction types; see `keeper/README.md`). Trading uses the bundled jupiter-mock on localnet and
   real Jupiter (quote + swap-instructions) on devnet/mainnet; everything reads from env, so retargeting a
   cluster is config-only. Each flow is verified headless by an `e2e:*` script that builds the same
   instructions the UI does (see `app/README.md`).
