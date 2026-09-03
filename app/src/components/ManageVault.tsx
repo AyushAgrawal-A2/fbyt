@@ -43,6 +43,7 @@ import {
   jupiterPoolPda,
   oraclePoolAddress,
 } from '@/lib/program';
+import { BotsPanel } from '@/components/BotsPanel';
 
 const DEFAULT_DELEGATE = '11111111111111111111111111111111';
 
@@ -72,6 +73,7 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
   const { data: meta } = useSWR(['metadata', vaultAddress], () =>
     fetch(`/api/vaults/${vaultAddress}/metadata`).then((r) => r.json()).then((j) => j.metadata as typeof profile | null),
   );
+  const { data: outMint } = useSWR(['demoOutMint'], () => demoOutMint().then(String));
   useEffect(() => {
     if (meta) setProfile({ name: meta.name ?? '', description: meta.description ?? '', strategy: meta.strategy ?? '' });
   }, [meta]);
@@ -381,6 +383,10 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
         ) : null}
         {advanceMsg ? <p className="mt-2 text-xs opacity-60">{advanceMsg}</p> : null}
       </section>
+
+      {isManager && outMint ? (
+        <BotsPanel vault={vaultAddress} baseMint={String(vault.data.tokenMint)} outMint={outMint} />
+      ) : null}
 
       <section className="card p-5">
         <h2 className="mb-1 font-semibold">Management fee</h2>

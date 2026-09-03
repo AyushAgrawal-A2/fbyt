@@ -21,6 +21,7 @@
     "e2e:metadata": "tsx scripts/e2e-metadata.ts",
     "e2e:auth": "tsx scripts/e2e-auth.ts",
     "e2e:accounts": "tsx scripts/e2e-accounts.ts",
+    "e2e:bots": "tsx scripts/e2e-bots.ts",
     "set-delegate": "tsx scripts/set-delegate.ts",
     "keeper": "tsx scripts/keeper.ts",
     "indexer": "tsx scripts/indexer.ts"
