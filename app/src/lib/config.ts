@@ -30,6 +30,9 @@ export const TOKEN_2022_PROGRAM_ID: Address = address('TokenzQdBNbLqP5VEhdkAS6EP
 /** USD amounts on-chain are micro-USD (6 dp). */
 export const USD_DECIMALS = 6;
 
+/** The cluster label shown in the UI (localnet | devnet | mainnet). */
+export const CLUSTER = process.env.NEXT_PUBLIC_CLUSTER ?? 'localnet';
+
 /**
  * Demo tradeable output asset seeded by `pnpm bootstrap` on the local surfnet. The manager UI trades
  * the vault's base token into this asset through the bundled jupiter-mock cloned at {@link JUPITER_PROGRAM_ID}.

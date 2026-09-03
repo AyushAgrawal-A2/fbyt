@@ -2,6 +2,7 @@ import './globals.css';
 import type { Metadata } from 'next';
 import { Providers } from './providers';
 import { Nav } from '@/components/Nav';
+import { Analytics } from '@/components/Analytics';
 
 export const metadata: Metadata = {
   title: 'FBYT — on-chain vaults',
@@ -16,6 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <Nav />
           <main className="mx-auto max-w-5xl px-5 py-8">{children}</main>
         </Providers>
+        <Analytics />
       </body>
     </html>
   );
