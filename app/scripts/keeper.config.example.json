@@ -1,0 +1,23 @@
+{
+  "vault": "<vault address>",
+  "delegateKeypair": ".keys/delegate.json",
+  "intervalSec": 60,
+  "ticks": 1,
+  "strategies": [
+    {
+      "type": "dca",
+      "inputMint": "D3mSMintFbyt1111111111111111111111111111111",
+      "outputMint": "<demo out mint from bootstrap>",
+      "inputAmount": "5000000",
+      "maxSlippageBps": 100
+    },
+    {
+      "type": "rebalance",
+      "assetA": "D3mSMintFbyt1111111111111111111111111111111",
+      "assetB": "<demo out mint>",
+      "targetABps": 6000,
+      "maxTradeAmount": "20000000",
+      "maxSlippageBps": 100
+    }
+  ]
+}

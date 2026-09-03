@@ -18,7 +18,9 @@
     "e2e:fee": "tsx scripts/e2e-fee.ts",
     "e2e:admin": "tsx scripts/e2e-admin.ts",
     "e2e:close": "tsx scripts/e2e-close.ts",
-    "e2e:metadata": "tsx scripts/e2e-metadata.ts"
+    "e2e:metadata": "tsx scripts/e2e-metadata.ts",
+    "set-delegate": "tsx scripts/set-delegate.ts",
+    "keeper": "tsx scripts/keeper.ts"
   },
   "dependencies": {
     "@solana-program/token": "^0.16.1",
