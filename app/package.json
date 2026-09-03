@@ -19,6 +19,7 @@
     "e2e:admin": "tsx scripts/e2e-admin.ts",
     "e2e:close": "tsx scripts/e2e-close.ts",
     "e2e:metadata": "tsx scripts/e2e-metadata.ts",
+    "e2e:auth": "tsx scripts/e2e-auth.ts",
     "set-delegate": "tsx scripts/set-delegate.ts",
     "keeper": "tsx scripts/keeper.ts",
     "indexer": "tsx scripts/indexer.ts"

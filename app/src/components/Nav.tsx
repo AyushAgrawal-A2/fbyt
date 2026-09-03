@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { WalletButton } from './WalletButton';
+import { SignIn } from './SignIn';
 
 const links = [
   { href: '/', label: 'Vaults' },
@@ -24,7 +25,10 @@ export function Nav() {
             ))}
           </div>
         </div>
-        <WalletButton />
+        <div className="flex items-center gap-3">
+          <SignIn />
+          <WalletButton />
+        </div>
       </nav>
     </header>
   );

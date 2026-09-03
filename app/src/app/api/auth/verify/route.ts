@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createHmac, createPublicKey, verify } from 'node:crypto';
+import { createPublicKey, verify } from 'node:crypto';
 import { getAddressEncoder } from '@solana/kit';
+import { SESSION_COOKIE, signSession } from '@/lib/session';
 
-const SESSION_SECRET = process.env.SESSION_SECRET ?? 'dev-only-secret-change-me';
 // DER/SPKI prefix for an Ed25519 public key (RFC 8410).
 const ED25519_SPKI_PREFIX = Buffer.from('302a300506032b6570032100', 'hex');
 
@@ -26,9 +26,8 @@ export async function POST(req: NextRequest) {
     const ok = verify(null, Buffer.from(message, 'base64'), spki, Buffer.from(signature, 'base64'));
     if (!ok) return NextResponse.json({ error: 'bad signature' }, { status: 401 });
 
-    const mac = createHmac('sha256', SESSION_SECRET).update(address).digest('hex');
     const res = NextResponse.json({ ok: true, address });
-    res.cookies.set('fbyt_session', `${address}.${mac}`, {
+    res.cookies.set(SESSION_COOKIE, signSession(address), {
       httpOnly: true,
       sameSite: 'lax',
       path: '/',
