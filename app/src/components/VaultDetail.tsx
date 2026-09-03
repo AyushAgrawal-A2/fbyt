@@ -29,6 +29,7 @@ import {
 } from '@/lib/program';
 import { fetchMaybeOraclePool } from '@/generated';
 import { NavChart } from '@/components/NavChart';
+import { WSOL_MINT, wrapSolInstructions } from '@/lib/wsol';
 import {
   formatBps,
   formatMicroUsd,
@@ -107,6 +108,10 @@ export function VaultDetail({ address }: { address: string }) {
     const investorPool = await investorPoolAddress(investor!, d.adminPool, vaultAddr, d.tokenMint);
 
     const ixs = [];
+    // for a wrapped-SOL vault, wrap the deposit amount from native SOL first (create wSOL ATA, fund, sync)
+    if (String(d.tokenMint) === String(WSOL_MINT)) {
+      ixs.push(...(await wrapSolInstructions(signer, investor!, toBaseUnits(human, decimals))));
+    }
     // the vault's base ATA must exist before the first deposit (the program does not init it);
     // create it idempotently so the first depositor bears the one-time rent.
     ixs.push(
