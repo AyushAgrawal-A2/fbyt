@@ -1,0 +1,63 @@
+# FBYT deployment: the app (standalone Next server), the NAV/trade indexer, and the Rust keeper —
+# all sharing one SQLite database on the `data` volume (WAL, so concurrent access is safe).
+#
+#   docker compose up --build
+#
+# Provide real values via a .env file next to this compose (see DEPLOY.md): SESSION_SECRET,
+# NEXT_PUBLIC_* (cluster/RPC/program id), SOLANA_RPC_URL for the keeper, and a mounted delegate keypair.
+services:
+  app:
+    build:
+      context: ./app
+      target: runner
+      args:
+        NEXT_PUBLIC_SOLANA_RPC_URL: ${NEXT_PUBLIC_SOLANA_RPC_URL:-}
+        NEXT_PUBLIC_WALLET_CHAIN: ${NEXT_PUBLIC_WALLET_CHAIN:-solana:mainnet}
+        NEXT_PUBLIC_CLUSTER: ${NEXT_PUBLIC_CLUSTER:-mainnet}
+        NEXT_PUBLIC_FBYT_PROGRAM_ID: ${NEXT_PUBLIC_FBYT_PROGRAM_ID:-}
+    environment:
+      NODE_ENV: production
+      FBYT_DB_PATH: /data/fbyt.db
+      SESSION_SECRET: ${SESSION_SECRET:?set a strong SESSION_SECRET}
+      SENTRY_DSN: ${SENTRY_DSN:-}
+      SOLANA_RPC_URL_FALLBACK: ${SOLANA_RPC_URL_FALLBACK:-}
+    ports:
+      - '3000:3000'
+    volumes:
+      - data:/data
+    restart: unless-stopped
+
+  indexer:
+    build:
+      context: ./app
+      target: indexer
+    environment:
+      APP_URL: http://app:3000
+      FBYT_DB_PATH: /data/fbyt.db
+      INDEX_INTERVAL_SEC: '30'
+    volumes:
+      - data:/data
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+
+  keeper:
+    build:
+      context: .
+      dockerfile: keeper/Dockerfile
+    command: ['/keys/delegate.json']
+    environment:
+      FBYT_DB_PATH: /data/fbyt.db
+      RPC_URL: ${SOLANA_RPC_URL:?set SOLANA_RPC_URL for the keeper}
+      KEEPER_INTERVAL_SEC: '30'
+    volumes:
+      - data:/data
+      - ${KEEPER_DELEGATE_KEYPAIR:?path to the delegate keypair json}:/keys/delegate.json:ro
+    depends_on:
+      app:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  data:

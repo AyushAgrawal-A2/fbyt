@@ -1,0 +1,8 @@
+node_modules
+.next
+.data
+.git
+.env.local
+scripts/.keys
+**/*.tsbuildinfo
+.codama-*
