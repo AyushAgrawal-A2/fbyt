@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RPC_URL } from '@/lib/config';
+import { guard } from '@/lib/guard';
 
 /**
  * POST /api/faucet  { address, mint, amount? }
@@ -19,6 +20,8 @@ async function cheat(method: string, params: unknown[]) {
 }
 
 export async function POST(req: NextRequest) {
+  const blocked = guard(req, { limit: 30, windowMs: 60_000 });
+  if (blocked) return blocked;
   try {
     const { address, mint, amount } = await req.json();
     if (!address || !mint) {

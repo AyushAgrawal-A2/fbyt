@@ -4,6 +4,7 @@ import { RPC_URL } from '@/lib/config';
 import { fetchMaybeVaultPool } from '@/generated';
 import { getMetadata, setMetadata } from '@/lib/metadataStore';
 import { metadataMessage, verifyEd25519 } from '@/lib/verifySig';
+import { guard } from '@/lib/guard';
 
 const MAX_AGE_MS = 5 * 60 * 1000;
 
@@ -19,6 +20,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ add
  * manager over a canonical, time-bounded message — no session/DB required.
  */
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ address: string }> }) {
+  const blocked = guard(req, { limit: 20, windowMs: 60_000 });
+  if (blocked) return blocked;
   try {
     const { address } = await params;
     const body = await req.json();

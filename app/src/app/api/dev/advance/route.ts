@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createHash } from 'node:crypto';
 import { createSolanaRpc, getProgramDerivedAddress, type Address } from '@solana/kit';
 import { RPC_URL, DEMO_OUT_FEED_HEX } from '@/lib/config';
+import { guard } from '@/lib/guard';
 import { fetchVaultPool, fetchOraclePool } from '@/generated';
 import {
   PYTH_PUSH_ORACLE_ID,
@@ -75,6 +76,8 @@ async function publishPrice(feed32: Uint8Array, priceMicro: bigint, publishTime:
 }
 
 export async function POST(req: NextRequest) {
+  const blocked = guard(req, { limit: 30, windowMs: 60_000 });
+  if (blocked) return blocked;
   try {
     const { vault } = await req.json();
     if (!vault) return NextResponse.json({ error: 'vault required' }, { status: 400 });

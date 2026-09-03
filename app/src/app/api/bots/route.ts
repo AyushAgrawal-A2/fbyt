@@ -3,6 +3,7 @@ import { createSolanaRpc, type Address } from '@solana/kit';
 import { RPC_URL } from '@/lib/config';
 import { fetchMaybeVaultPool } from '@/generated';
 import { currentUser } from '@/lib/session';
+import { guard } from '@/lib/guard';
 import { dbAll, dbAppend } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -24,6 +25,8 @@ export async function GET(req: NextRequest) {
  * manager, and the vault must already have a trading delegate set (the key the keeper signs with).
  */
 export async function POST(req: NextRequest) {
+  const blocked = guard(req, { limit: 20, windowMs: 60_000 });
+  if (blocked) return blocked;
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   const body = await req.json().catch(() => ({}));

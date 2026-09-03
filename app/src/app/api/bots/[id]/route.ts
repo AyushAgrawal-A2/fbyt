@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@/lib/session';
+import { guard } from '@/lib/guard';
 import { dbGet, dbUpdate, dbPut, dbQuery } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -18,6 +19,8 @@ export async function GET(_req: NextRequest, { params }: { params: Promise<{ id:
 
 /** PATCH /api/bots/[id]  { enabled } — enable/halt a bot. Session-gated to the owner. */
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = guard(req, { limit: 30, windowMs: 60_000 });
+  if (blocked) return blocked;
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   const { id } = await params;
@@ -30,7 +33,9 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
 }
 
 /** DELETE /api/bots/[id] — remove a bot. Session-gated to the owner. */
-export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = guard(req, { limit: 30, windowMs: 60_000 });
+  if (blocked) return blocked;
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   const { id } = await params;

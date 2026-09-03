@@ -1,25 +1,47 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 import { cookies } from 'next/headers';
 
-const SESSION_SECRET = process.env.SESSION_SECRET ?? 'dev-only-secret-change-me';
+const DEFAULT_SECRET = 'dev-only-secret-change-me';
 export const SESSION_COOKIE = 'fbyt_session';
+export const SESSION_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
-/** The HMAC-signed session cookie value binding a wallet address. */
-export function signSession(address: string): string {
-  const mac = createHmac('sha256', SESSION_SECRET).update(address).digest('hex');
-  return `${address}.${mac}`;
+/**
+ * The HMAC secret for session cookies. In production a real secret is mandatory — the app refuses to
+ * mint or accept sessions with the dev default, so a leaked default can't be used to forge cookies.
+ */
+function secret(): string {
+  const s = process.env.SESSION_SECRET;
+  if (!s || s === DEFAULT_SECRET) {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error('SESSION_SECRET must be set to a strong, non-default value in production');
+    }
+    return DEFAULT_SECRET;
+  }
+  return s;
 }
 
-/** Verify a `${address}.${mac}` cookie value and return the address, or null. */
+function mac(payload: string): string {
+  return createHmac('sha256', secret()).update(payload).digest('hex');
+}
+
+/** The signed session cookie value: `address.issuedAt.mac`, bound to a strong secret. */
+export function signSession(address: string): string {
+  const issuedAt = Date.now();
+  const payload = `${address}.${issuedAt}`;
+  return `${payload}.${mac(payload)}`;
+}
+
+/** Verify a session cookie: checks the HMAC and that it hasn't expired. Returns the address, or null. */
 export function verifySession(value: string | undefined): string | null {
   if (!value) return null;
-  const i = value.lastIndexOf('.');
-  if (i < 0) return null;
-  const address = value.slice(0, i);
-  const mac = value.slice(i + 1);
-  const expected = createHmac('sha256', SESSION_SECRET).update(address).digest('hex');
+  const parts = value.split('.');
+  if (parts.length !== 3) return null;
+  const [address, issuedAtStr, sig] = parts;
+  const issuedAt = Number(issuedAtStr);
+  if (!Number.isFinite(issuedAt) || Date.now() - issuedAt > SESSION_MAX_AGE_MS) return null;
+  const expected = mac(`${address}.${issuedAt}`);
   try {
-    if (mac.length === expected.length && timingSafeEqual(Buffer.from(mac), Buffer.from(expected))) return address;
+    if (sig.length === expected.length && timingSafeEqual(Buffer.from(sig), Buffer.from(expected))) return address;
   } catch {
     /* fall through */
   }

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@/lib/session';
+import { guard } from '@/lib/guard';
 import { dbGet, dbUpdate } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -7,7 +8,9 @@ export const dynamic = 'force-dynamic';
 type Launch = { id: string; voters: string[] };
 
 /** POST /api/launches/[id]/vote — upvote a launch (one per user, toggles off). Session-gated. */
-export async function POST(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const blocked = guard(req, { limit: 30, windowMs: 60_000 });
+  if (blocked) return blocked;
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   const { id } = await params;

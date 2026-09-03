@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { currentUser } from '@/lib/session';
+import { guard } from '@/lib/guard';
 import { getOrCreateUser, updateProfile, applyReferral } from '@/lib/users';
 
 export const dynamic = 'force-dynamic';
@@ -16,6 +17,8 @@ export async function GET() {
  * Updates the signed-in user's profile / accepts terms / records a referral. Session-gated.
  */
 export async function PUT(req: NextRequest) {
+  const blocked = guard(req, { limit: 20, windowMs: 60_000 });
+  if (blocked) return blocked;
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   const body = await req.json().catch(() => ({}));

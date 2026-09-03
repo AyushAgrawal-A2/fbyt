@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { currentUser } from '@/lib/session';
+import { guard } from '@/lib/guard';
 import { dbPut } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
@@ -16,6 +17,8 @@ const ALLOWED: Record<string, string> = { 'image/png': 'png', 'image/jpeg': 'jpg
  * avatars/logos this way; here they live under `.data/uploads/` and are served by /api/uploads/[id].
  */
 export async function POST(req: NextRequest) {
+  const blocked = guard(req, { limit: 10, windowMs: 60_000 });
+  if (blocked) return blocked;
   const me = await currentUser();
   if (!me) return NextResponse.json({ error: 'not signed in' }, { status: 401 });
   const { dataUrl } = await req.json().catch(() => ({}));
