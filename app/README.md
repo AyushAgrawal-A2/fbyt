@@ -150,6 +150,18 @@ local surfnet there's no real liquidity, so the bundled **jupiter-mock** stands 
 | `POST /api/faucet` | Local-surfnet only: funds a wallet with SOL + demo base tokens via cheatcodes. |
 | `POST /api/dev/advance` | Local-surfnet only: time-travels a vault past its fundraise and refreshes oracle prices, so it can trade. |
 
+## Hardening
+
+- **Datastore**: one SQLite database (WAL) at `.data/fbyt.db` (`FBYT_DB_PATH`), shared cross-process by
+  the app, indexer, and Rust keeper. `src/lib/db.ts` is the swap point for Postgres.
+- **Security**: `SESSION_SECRET` is mandatory in production; SIWS nonces are one-time; sessions expire;
+  every mutating route is rate-limited and origin-checked (`src/lib/guard.ts`).
+- **Reliability**: `serverRpc()` retries + fails over (`SOLANA_RPC_URL_FALLBACK`); `GET /api/health`
+  for probes; Sentry error reporting via its ingest protocol (`SENTRY_DSN`, no SDK); the keeper holds a
+  leader lock so replicas don't double-trade.
+- **Tests**: `pnpm test` (node:test) covers the Jupiter route adapter, signature verification, and the
+  rate limiter. **Deploy**: Dockerfiles + `docker-compose.yml` + CI + `DEPLOY.md` at the repo root.
+
 ## Notes
 
 - **Every program instruction is wired**: the UI exercises 28 of the 29; `create_admin_pool` (upgrade-authority

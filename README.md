@@ -72,3 +72,9 @@ a local faucet. See [`app/README.md`](./app/README.md) for setup and the run ste
   real Jupiter (quote + swap-instructions) on devnet/mainnet; everything reads from env, so retargeting a
   cluster is config-only. Each flow is verified headless by an `e2e:*` script that builds the same
   instructions the UI does (see `app/README.md`).
+- Production hardening: a single **SQLite** datastore (WAL) shared cross-process by the app, indexer,
+  and keeper; security (mandatory `SESSION_SECRET`, one-time SIWS nonces, expiring sessions, per-route
+  rate limiting + CSRF/origin checks); reliability (retry/failover RPC transport, `/api/health`,
+  dependency-free Sentry error reporting, structured logging, a keeper leader-lock); a `node:test`
+  unit suite (`pnpm test`); and a deployable setup (Dockerfiles for app/indexer/keeper,
+  `docker-compose.yml`, CI, `DEPLOY.md`).
