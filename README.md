@@ -70,8 +70,10 @@ a local faucet. See [`app/README.md`](./app/README.md) for setup and the run ste
   with image uploads, and a keeper + bots platform (the production keeper is a **Rust** service in
   `keeper/` that reuses the program's own state/accounts/instruction types; see `keeper/README.md`). Trading uses the bundled jupiter-mock on localnet and
   real Jupiter (quote + swap-instructions) on devnet/mainnet; everything reads from env, so retargeting a
-  cluster is config-only. Each flow is verified headless by an `e2e:*` script that builds the same
-  instructions the UI does (see `app/README.md`).
+  cluster is config-only. Real Jupiter is **verified end-to-end** on a mainnet-fork surfnet — both the
+  UI path and the Rust keeper trade wSOL → USDC through real Jupiter (real Pyth oracles, vault-PDA CPI),
+  choosing from the curated 52-asset catalog (incl. Token-2022 xStocks). Each flow is verified headless
+  by an `e2e:*` script that builds the same instructions the UI does (see `app/README.md`).
 - Production hardening: a single **SQLite** datastore (WAL) shared cross-process by the app, indexer,
   and keeper; security (mandatory `SESSION_SECRET`, one-time SIWS nonces, expiring sessions, per-route
   rate limiting + CSRF/origin checks); reliability (retry/failover RPC transport, `/api/health`,

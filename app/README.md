@@ -110,10 +110,18 @@ pnpm indexer                                   # snapshots every 30s (needs `pnp
 
 Everything reads from env, so a real deployment is config-only. Set `NEXT_PUBLIC_SOLANA_RPC_URL` to a
 devnet/mainnet provider, `NEXT_PUBLIC_WALLET_CHAIN`/`NEXT_PUBLIC_CLUSTER` to match, a strong
-`SESSION_SECRET`, and (optionally) `NEXT_PUBLIC_GA_ID` / `NEXT_PUBLIC_SENTRY_DSN` for monitoring. There,
-trades go through **real Jupiter**: quote via `/api/jupiter/quote`, build the route via
-`/api/jupiter/swap-instructions`, and pass its instruction data + accounts to the on-chain `swap`. On the
-local surfnet there's no real liquidity, so the bundled **jupiter-mock** stands in.
+`SESSION_SECRET`, and (optionally) `NEXT_PUBLIC_GA_ID` / `NEXT_PUBLIC_SENTRY_DSN` for monitoring.
+
+**Real Jupiter trading** (on when `NEXT_PUBLIC_USE_REAL_JUPITER=1`, or on devnet/mainnet): the manage
+page and the keeper quote via `/api/jupiter/quote`, build the route via `/api/jupiter/swap-instructions`,
+adapt it (`src/lib/jupiterRoute.ts` downgrades the vault-PDA signer — the program CPI-signs), and pass
+Jupiter's data + accounts to the on-chain `swap`. The output amount, price impact and fees come from
+Jupiter's quote. The target asset is chosen from the curated 52-asset catalog (`GET /api/assets`,
+including Token-2022 xStocks). On the local surfnet the bundled **jupiter-mock** stands in, but the real
+path is **verified end-to-end against a mainnet-fork surfnet** — `pnpm e2e:jupiter-real` trades wSOL →
+USDC through real Jupiter (real Pyth oracles, vault-PDA CPI), and the Rust keeper does the same in
+`USE_REAL_JUPITER=1` mode. (Fork execution needs a direct route through a well-cloned AMM + high Jupiter
+slippage to absorb the fork-vs-live pool gap; on a real cluster any route works.)
 
 ## Pages
 
