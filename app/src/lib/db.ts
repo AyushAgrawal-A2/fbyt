@@ -1,53 +1,40 @@
-import { mkdir, readFile, writeFile } from 'node:fs/promises';
+import { mkdirSync } from 'node:fs';
 import { join } from 'node:path';
+import { DatabaseSync } from 'node:sqlite';
 
 /**
- * A tiny file-backed JSON document store — the local stand-in for the platform's database. Each
- * collection is one JSON file under `.data/db/` mapping id → document. It is process-serialized (a
- * per-file promise chain) so concurrent writes in the single Next/keeper process don't clobber each
- * other. Fine for a local clone; a production deployment would point these same call sites at Postgres.
+ * The datastore — a single SQLite database (WAL mode) holding every collection as rows of
+ * `docs(collection, id, data)`. WAL makes it safe for the Next server, the indexer, and the Rust
+ * keeper to read/write the same file concurrently (unlike the old JSON files, which clobbered under
+ * cross-process writes). The document API below is unchanged, so call sites didn't move; a production
+ * deployment can repoint these same calls at Postgres.
  */
-const DIR = join(process.cwd(), '.data', 'db');
-const locks = new Map<string, Promise<unknown>>();
-
 type Doc = Record<string, unknown> & { id: string };
 
-function file(collection: string): string {
-  return join(DIR, `${collection.replace(/[^a-zA-Z0-9_-]/g, '_')}.json`);
-}
+const DB_PATH = process.env.FBYT_DB_PATH ?? join(process.cwd(), '.data', 'fbyt.db');
 
-async function readColl<T extends Doc>(collection: string): Promise<Record<string, T>> {
-  try {
-    return JSON.parse(await readFile(file(collection), 'utf8')) as Record<string, T>;
-  } catch {
-    return {};
-  }
-}
-
-/** Serialize a read-modify-write against one collection so concurrent callers don't race. */
-async function withColl<T extends Doc, R>(collection: string, fn: (coll: Record<string, T>) => R | Promise<R>): Promise<R> {
-  const prev = locks.get(collection) ?? Promise.resolve();
-  let release!: () => void;
-  const gate = new Promise<void>((r) => (release = r));
-  locks.set(collection, prev.then(() => gate));
-  await prev.catch(() => {});
-  try {
-    const coll = await readColl<T>(collection);
-    const result = await fn(coll);
-    await mkdir(DIR, { recursive: true });
-    await writeFile(file(collection), JSON.stringify(coll, null, 2));
-    return result;
-  } finally {
-    release();
-  }
+// cache the connection across hot-reloads / imports within a process
+const g = globalThis as unknown as { __fbytDb?: DatabaseSync };
+function db(): DatabaseSync {
+  if (g.__fbytDb) return g.__fbytDb;
+  mkdirSync(join(DB_PATH, '..'), { recursive: true });
+  const d = new DatabaseSync(DB_PATH);
+  d.exec('PRAGMA journal_mode = WAL');
+  d.exec('PRAGMA busy_timeout = 5000');
+  d.exec('PRAGMA foreign_keys = ON');
+  d.exec('CREATE TABLE IF NOT EXISTS docs (collection TEXT NOT NULL, id TEXT NOT NULL, data TEXT NOT NULL, PRIMARY KEY (collection, id))');
+  g.__fbytDb = d;
+  return d;
 }
 
 export async function dbAll<T extends Doc = Doc>(collection: string): Promise<T[]> {
-  return Object.values(await readColl<T>(collection));
+  const rows = db().prepare('SELECT data FROM docs WHERE collection = ?').all(collection) as { data: string }[];
+  return rows.map((r) => JSON.parse(r.data) as T);
 }
 
 export async function dbGet<T extends Doc = Doc>(collection: string, id: string): Promise<T | null> {
-  return (await readColl<T>(collection))[id] ?? null;
+  const row = db().prepare('SELECT data FROM docs WHERE collection = ? AND id = ?').get(collection, id) as { data: string } | undefined;
+  return row ? (JSON.parse(row.data) as T) : null;
 }
 
 export async function dbQuery<T extends Doc = Doc>(collection: string, pred: (d: T) => boolean): Promise<T[]> {
@@ -56,26 +43,36 @@ export async function dbQuery<T extends Doc = Doc>(collection: string, pred: (d:
 
 /** Insert or replace a document by id. */
 export async function dbPut<T extends Doc>(collection: string, doc: T): Promise<T> {
-  return withColl<T, T>(collection, (coll) => {
-    coll[doc.id] = doc;
-    return doc;
-  });
+  db().prepare('INSERT OR REPLACE INTO docs (collection, id, data) VALUES (?, ?, ?)').run(collection, doc.id, JSON.stringify(doc));
+  return doc;
 }
 
-/** Merge fields into an existing document (creating it if absent). */
+/** Merge fields into an existing document (creating it if absent), atomically. */
 export async function dbUpdate<T extends Doc>(collection: string, id: string, patch: Partial<T>): Promise<T> {
-  return withColl<T, T>(collection, (coll) => {
-    const next = { ...(coll[id] ?? { id }), ...patch, id } as T;
-    coll[id] = next;
+  const d = db();
+  d.exec('BEGIN IMMEDIATE');
+  try {
+    const row = d.prepare('SELECT data FROM docs WHERE collection = ? AND id = ?').get(collection, id) as { data: string } | undefined;
+    const cur = (row ? JSON.parse(row.data) : { id }) as T;
+    const next = { ...cur, ...patch, id } as T;
+    d.prepare('INSERT OR REPLACE INTO docs (collection, id, data) VALUES (?, ?, ?)').run(collection, id, JSON.stringify(next));
+    d.exec('COMMIT');
     return next;
-  });
+  } catch (e) {
+    d.exec('ROLLBACK');
+    throw e;
+  }
 }
 
 /** Append a document with a generated id (or an explicit one), skipping if that id already exists. */
 export async function dbAppend<T extends Omit<Doc, 'id'>>(collection: string, doc: T, id?: string): Promise<string> {
   const key = id ?? `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
-  await withColl<Doc, void>(collection, (coll) => {
-    if (!coll[key]) coll[key] = { ...(doc as Record<string, unknown>), id: key };
-  });
+  const value = JSON.stringify({ ...(doc as Record<string, unknown>), id: key });
+  db().prepare('INSERT OR IGNORE INTO docs (collection, id, data) VALUES (?, ?, ?)').run(collection, key, value);
   return key;
+}
+
+/** Remove a document. */
+export async function dbDelete(collection: string, id: string): Promise<void> {
+  db().prepare('DELETE FROM docs WHERE collection = ? AND id = ?').run(collection, id);
 }
