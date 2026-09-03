@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "next lint",
     "codegen": "node scripts/codama.mjs",
+    "test": "node --import tsx --test 'test/**/*.test.ts'",
     "localnet": "surfpool start",
     "bootstrap": "tsx scripts/bootstrap.ts",
     "e2e:deposit": "tsx scripts/e2e-deposit.ts",
