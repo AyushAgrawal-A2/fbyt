@@ -6,6 +6,7 @@ const links = [
   { href: '/', label: 'Vaults' },
   { href: '/create', label: 'Create' },
   { href: '/portfolio', label: 'Portfolio' },
+  { href: '/launches', label: 'Launches' },
   { href: '/points', label: 'Points' },
   { href: '/account', label: 'Account' },
   { href: '/admin', label: 'Admin' },
