@@ -84,6 +84,37 @@ fn insert_ignore(conn: &rusqlite::Connection, collection: &str, id: &str, v: &Va
     )?;
     Ok(())
 }
+/// Advisory leader lock so two keeper instances never trade the same bots concurrently (which would
+/// double-execute). Acquired transactionally in SQLite; `holder` identifies this process and the lock
+/// self-expires so a crashed keeper doesn't wedge the fleet. Returns true if we hold the lock.
+fn acquire_lock(conn: &rusqlite::Connection, holder: &str, ttl_ms: u64) -> Result<bool, Box<dyn std::error::Error>> {
+    let now = now_ms();
+    let tx = conn.unchecked_transaction()?;
+    let cur: Option<String> = tx
+        .query_row("SELECT data FROM docs WHERE collection = 'keeperLocks' AND id = 'leader'", [], |r| r.get(0))
+        .ok();
+    if let Some(data) = cur {
+        let v: Value = serde_json::from_str(&data).unwrap_or_else(|_| json!({}));
+        let exp = v["exp"].as_u64().unwrap_or(0);
+        let owner = v["holder"].as_str().unwrap_or("");
+        if exp > now && owner != holder {
+            return Ok(false); // another live keeper holds it
+        }
+    }
+    let lock = json!({ "id": "leader", "holder": holder, "exp": now + ttl_ms });
+    tx.execute(
+        "INSERT OR REPLACE INTO docs (collection, id, data) VALUES ('keeperLocks', 'leader', ?1)",
+        rusqlite::params![lock.to_string()],
+    )?;
+    tx.commit()?;
+    Ok(true)
+}
+fn release_lock(conn: &rusqlite::Connection, holder: &str) {
+    let _ = conn.execute(
+        "DELETE FROM docs WHERE collection = 'keeperLocks' AND id = 'leader' AND json_extract(data,'$.holder') = ?1",
+        rusqlite::params![holder],
+    );
+}
 
 fn ata(owner: &Pubkey, mint: &Pubkey) -> Pubkey {
     Pubkey::find_program_address(
@@ -262,6 +293,13 @@ fn run_once(delegate_path: &str) -> Result<(), Box<dyn std::error::Error>> {
     let program = client.program(program_id)?;
     let rpc = program.rpc();
     let conn = open_db()?;
+
+    // only one keeper trades at a time (leader lock); a crashed holder's lock self-expires
+    let holder = format!("{}-{}", std::process::id(), now_ms());
+    if !acquire_lock(&conn, &holder, 120_000)? {
+        println!("[keeper] another keeper holds the lock; skipping this tick");
+        return Ok(());
+    }
 
     let bots_obj: HashMap<String, Value> = read_collection(&conn, "bots")?.into_iter().collect();
     // group enabled bots for this delegate by vault
@@ -490,6 +528,7 @@ fn run_once(delegate_path: &str) -> Result<(), Box<dyn std::error::Error>> {
         }
     }
 
+    release_lock(&conn, &holder);
     println!("[keeper] done");
     Ok(())
 }
