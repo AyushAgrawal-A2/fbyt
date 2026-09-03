@@ -60,7 +60,12 @@ a local faucet. See [`app/README.md`](./app/README.md) for setup and the run ste
   behaviors (a sub-token rounding in the token→USD conversion and the withdraw performance-fee model)
   are documented as known divergences rather than approximated (see `RPC_FINDINGS.md`).
 - Assessment: complete.
-- App: the full vault lifecycle works against a local surfnet — investors deposit and redeem, managers
-  set a trading delegate and trade (`swap`) through the bundled jupiter-mock, and the operator streams
-  the management fee. Each flow is verified headless by an `e2e:*` script that builds the same
-  instructions the UI does (see `app/README.md`).
+- App: a functional clone running against a local surfnet. Bootstrap onboards through the program's own
+  instructions (admin pool, oracles, vault); every one of the 29 instructions is exercised (28 from the
+  UI, `create_admin_pool` from bootstrap). Investors deposit/redeem and see live position value;
+  managers set a delegate, trade (`swap`) through the bundled jupiter-mock, withdraw fees, and close
+  vaults; a protocol-admin console onboards assets and manages config/roles. The app computes live
+  NAV/PnL, per-asset holdings, and trade history from chain state (no indexer), stores signed off-chain
+  vault profiles, and ships a keeper bot that runs DCA/rebalance strategies via the trading delegate.
+  Each flow is verified headless by an `e2e:*` script that builds the same instructions the UI does
+  (see `app/README.md`).
