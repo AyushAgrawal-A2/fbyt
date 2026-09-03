@@ -16,6 +16,7 @@ import {
 } from '@solana/kit';
 import { solanaRpc } from '@solana/kit-plugin-rpc';
 import { signer } from '@solana/kit-plugin-signer';
+import { getCreateAssociatedTokenIdempotentInstructionAsync } from '@solana-program/token';
 import {
   fetchVaultPool,
   fetchMaybeInvestorPool,
@@ -89,6 +90,9 @@ async function main() {
 
   const amount = 100_000_000n; // 100 tokens (6dp)
   const ixs = [
+    // the vault's base ATA must exist before the first deposit (the program does not init it);
+    // the first depositor creates it idempotently.
+    await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: investor, owner: VAULT, mint: d.tokenMint }),
     await getCreateInvestorPoolInstructionAsync({
       investor,
       vaultPool: VAULT,

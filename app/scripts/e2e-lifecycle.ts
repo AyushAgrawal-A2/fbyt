@@ -23,6 +23,7 @@ import {
 } from '@solana/kit';
 import { solanaRpc } from '@solana/kit-plugin-rpc';
 import { signer } from '@solana/kit-plugin-signer';
+import { getCreateAssociatedTokenIdempotentInstructionAsync } from '@solana-program/token';
 import {
   fetchVaultPool,
   fetchAdminPool,
@@ -94,6 +95,7 @@ async function main() {
   const managerBaseAta = await ata(manager.address, d.tokenMint);
   const [investorPool] = await getProgramDerivedAddress({ programAddress: PROGRAM_ID, seeds: [new TextEncoder().encode('InvestorPool'), addrEnc.encode(manager.address), addrEnc.encode(d.adminPool), addrEnc.encode(VAULT), addrEnc.encode(d.tokenMint)] });
   const ixs = [];
+  ixs.push(await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: manager, owner: VAULT, mint: d.tokenMint }));
   if (!(await fetchMaybeInvestorPool(client.rpc, investorPool)).exists) ixs.push(await getCreateInvestorPoolInstructionAsync({ investor: manager, vaultPool: VAULT, tokenMint: d.tokenMint }));
   ixs.push(await getDepositTokenFundInstructionAsync({ investor: manager, vaultPool: VAULT, oraclePool: baseOracle, fromAccount: managerBaseAta, tokenMint: d.tokenMint, priceUpdate: basePrice, tokenProgram: TOKEN_PROGRAM, amount: 100_000_000n }));
   await client.sendTransaction(ixs);

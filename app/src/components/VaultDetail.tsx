@@ -82,6 +82,15 @@ export function VaultDetail({ address }: { address: string }) {
     const investorPool = await investorPoolAddress(investor!, d.adminPool, vaultAddr, d.tokenMint);
 
     const ixs = [];
+    // the vault's base ATA must exist before the first deposit (the program does not init it);
+    // create it idempotently so the first depositor bears the one-time rent.
+    ixs.push(
+      await getCreateAssociatedTokenIdempotentInstructionAsync({
+        payer: signer,
+        owner: vaultAddr,
+        mint: d.tokenMint,
+      }),
+    );
     if (!position?.exists) {
       ixs.push(
         await getCreateInvestorPoolInstructionAsync({

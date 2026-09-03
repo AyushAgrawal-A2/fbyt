@@ -18,6 +18,7 @@ import {
 } from '@solana/kit';
 import { solanaRpc } from '@solana/kit-plugin-rpc';
 import { signer } from '@solana/kit-plugin-signer';
+import { getCreateAssociatedTokenIdempotentInstructionAsync } from '@solana-program/token';
 import {
   fetchVaultPool,
   fetchAdminPool,
@@ -107,6 +108,7 @@ async function main() {
   await rpc('surfnet_setTokenAccount', [investor.address, d.tokenMint, { amount: 1_000_000_000 }]);
   const fromAccount = await ata(investor.address, d.tokenMint);
   await client.sendTransaction([
+    await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: investor, owner: VAULT, mint: d.tokenMint }),
     await getCreateInvestorPoolInstructionAsync({ investor, vaultPool: VAULT, tokenMint: d.tokenMint }),
     await getDepositTokenFundInstructionAsync({ investor, vaultPool: VAULT, oraclePool, fromAccount, tokenMint: d.tokenMint, priceUpdate, tokenProgram: TOKEN_PROGRAM, amount: 100_000_000n }),
   ]);
