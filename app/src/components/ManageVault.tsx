@@ -6,18 +6,22 @@ import {
   AccountRole,
   type Address,
   type AccountMeta,
+  type Instruction,
 } from '@solana/kit';
 import { useAction } from '@solana/react';
 import { useConnectedWallet } from '@solana/kit-plugin-wallet/react';
 import useSWR from 'swr';
+import { getCreateAssociatedTokenIdempotentInstructionAsync } from '@solana-program/token';
 import {
   fetchMaybeVaultPool,
   fetchMaybeAdminPool,
   fetchMaybeOraclePool,
+  fetchMaybeAssetRegistry,
   findAdminPoolPda,
   getSetTradingDelegateInstruction,
   getRevokeTradingDelegateInstruction,
   getSwapInstruction,
+  getWithdrawMoneyManagementFeeInstructionAsync,
 } from '@/generated';
 import { client } from '@/app/providers';
 import { shortAddress } from '@/lib/format';
@@ -26,6 +30,7 @@ import {
   JUPITER_PROGRAM_ID,
   SYSTEM_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
+  TOKEN_2022_PROGRAM_ID,
 } from '@/lib/config';
 import {
   ata,
@@ -61,8 +66,15 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
   const [tradeOut, setTradeOut] = useState('');
   const [advanceMsg, setAdvanceMsg] = useState<string | null>(null);
 
+  const { data: adminPool } = useSWR(['adminPool'], async () => {
+    const [a] = await findAdminPoolPda({ programAddress: FBYT_PROGRAM_ID });
+    return fetchMaybeAdminPool(client.rpc, a);
+  });
+
   const isManager =
     vault?.exists && connected && String(vault.data.moneyManager) === connected.account.address;
+  const isOperator =
+    adminPool?.exists && connected && String(adminPool.data.operator) === connected.account.address;
 
   const setDelegateAction = useAction(async (signal: AbortSignal, value: string) => {
     if (!connected?.signer) throw new Error('Connect the manager wallet');
@@ -149,6 +161,39 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
       [{ programAddress: base.programAddress, accounts: [...base.accounts, ...route] as AccountMeta[], data: base.data }],
       { abortSignal: signal },
     );
+    await mutate();
+    return String(res.context.signature);
+  });
+
+  // Operator-only: stream the accrued management fee in kind for every vault asset. Passes a group of
+  // 4 `[mint, vault_ata, manager_ata, protocol_ata]` per asset (base mint + everything the vault has
+  // traded into, from the asset registry) and idempotently creates the fee-recipient ATAs first.
+  const feeAction = useAction(async (signal: AbortSignal) => {
+    if (!connected?.signer || !vault?.exists || !adminPool?.exists) throw new Error('Connect the operator wallet');
+    const d = vault.data;
+    const reg = await fetchMaybeAssetRegistry(client.rpc, await assetRegistryAddress(vaultAddr));
+    const registryMints = reg.exists ? reg.data.assetMints.map((m) => String(m)) : [];
+    const assetMints = [String(d.tokenMint), ...registryMints].filter((m, i, a) => a.indexOf(m) === i);
+
+    const ixs: Instruction[] = [];
+    const ro = (a: Address): AccountMeta => ({ address: a, role: AccountRole.READONLY });
+    const w = (a: Address): AccountMeta => ({ address: a, role: AccountRole.WRITABLE });
+    const remaining: AccountMeta[] = [];
+    for (const m of assetMints) {
+      const mint = m as Address;
+      ixs.push(await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: connected.signer, owner: d.moneyManager, mint }));
+      ixs.push(await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: connected.signer, owner: adminPool.data.admin, mint }));
+      remaining.push(ro(mint), w(await ata(vaultAddr, mint)), w(await ata(d.moneyManager, mint)), w(await ata(adminPool.data.admin, mint)));
+    }
+    const base = await getWithdrawMoneyManagementFeeInstructionAsync({
+      operator: connected.signer,
+      vaultPool: vaultAddr,
+      tokenProgram: TOKEN_PROGRAM_ID,
+      tokenProgram2022: TOKEN_2022_PROGRAM_ID,
+    });
+    ixs.push({ programAddress: base.programAddress, accounts: [...base.accounts, ...remaining] as AccountMeta[], data: base.data });
+
+    const res = await client.sendTransaction(ixs, { abortSignal: signal });
     await mutate();
     return String(res.context.signature);
   });
@@ -273,13 +318,36 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
         {advanceMsg ? <p className="mt-2 text-xs opacity-60">{advanceMsg}</p> : null}
       </section>
 
-      <section className="card p-5 opacity-90">
+      <section className="card p-5">
         <h2 className="mb-1 font-semibold">Management fee</h2>
-        <p className="text-sm opacity-60">
-          Fees are streamed in kind and triggered by the protocol <em>operator</em> (not the manager)
-          via <code>withdraw_money_management_fee</code>, once per <code>mm_withdraw_period</code>. It
-          takes per-asset recipient accounts; the bootstrap operator key can exercise it.
+        <p className="mb-3 text-sm opacity-60">
+          The accrued fee is streamed in kind and triggered by the protocol <em>operator</em> (not the
+          manager) via <code>withdraw_money_management_fee</code>, at most once per{' '}
+          <code>mm_withdraw_period</code>, split between the manager and the protocol. The vault must
+          have traded and not be dormant.
         </p>
+        {isOperator ? (
+          <>
+            <button
+              className="btn"
+              disabled={feeAction.isRunning}
+              onClick={() => feeAction.dispatch()}
+            >
+              {feeAction.isRunning ? 'Withdrawing…' : 'Withdraw management fee'}
+            </button>
+            {feeAction.error ? (
+              <p className="mt-2 text-xs text-red-400">{String(feeAction.error)}</p>
+            ) : feeAction.data ? (
+              <p className="mt-2 text-xs text-emerald-400">
+                Streamed — {shortAddress(String(feeAction.data), 6, 6)}
+              </p>
+            ) : null}
+          </>
+        ) : (
+          <p className="text-xs opacity-50">
+            Connect the protocol operator wallet to trigger it.
+          </p>
+        )}
       </section>
     </div>
   );
