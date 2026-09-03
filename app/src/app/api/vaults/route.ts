@@ -1,15 +1,21 @@
 import { NextResponse } from 'next/server';
 import { serverRpc } from '@/lib/rpc-server';
 import { fetchVaults, sortVaults } from '@/lib/vaults';
+import { getAllMetadata } from '@/lib/metadataStore';
 
 export const dynamic = 'force-dynamic';
 
-/** GET /api/vaults — the decoded VaultPool list, ranked by capital raised. */
+/** GET /api/vaults — the decoded VaultPool list (merged with off-chain profiles), ranked by capital raised. */
 export async function GET() {
   try {
-    const vaults = sortVaults(await fetchVaults(serverRpc()));
+    const [vaults, meta] = await Promise.all([
+      fetchVaults(serverRpc()).then(sortVaults),
+      getAllMetadata(),
+    ]);
     const body = vaults.map((v) => ({
       address: v.address,
+      name: meta[v.address]?.name ?? '',
+      strategy: meta[v.address]?.strategy ?? '',
       status: v.data.vaultPoolStatus,
       tokenMint: String(v.data.tokenMint),
       moneyManager: String(v.data.moneyManager),

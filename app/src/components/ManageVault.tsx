@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   address,
   AccountRole,
@@ -9,7 +9,7 @@ import {
   type Instruction,
 } from '@solana/kit';
 import { useAction } from '@solana/react';
-import { useConnectedWallet } from '@solana/kit-plugin-wallet/react';
+import { useConnectedWallet, useSignMessage } from '@solana/kit-plugin-wallet/react';
 import useSWR from 'swr';
 import { getCreateAssociatedTokenIdempotentInstructionAsync } from '@solana-program/token';
 import {
@@ -66,6 +66,15 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
   const [tradeIn, setTradeIn] = useState('');
   const [tradeOut, setTradeOut] = useState('');
   const [advanceMsg, setAdvanceMsg] = useState<string | null>(null);
+  const signMessage = useSignMessage(client);
+  const [profile, setProfile] = useState({ name: '', description: '', strategy: '' });
+  const [profileMsg, setProfileMsg] = useState<string | null>(null);
+  const { data: meta } = useSWR(['metadata', vaultAddress], () =>
+    fetch(`/api/vaults/${vaultAddress}/metadata`).then((r) => r.json()).then((j) => j.metadata as typeof profile | null),
+  );
+  useEffect(() => {
+    if (meta) setProfile({ name: meta.name ?? '', description: meta.description ?? '', strategy: meta.strategy ?? '' });
+  }, [meta]);
 
   const { data: adminPool } = useSWR(['adminPool'], async () => {
     const [a] = await findAdminPoolPda({ programAddress: FBYT_PROGRAM_ID });
@@ -213,6 +222,29 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
     return String(res.context.signature);
   });
 
+  // Save the off-chain vault profile. The manager signs a canonical, time-bounded message; the API
+  // verifies the signature is by the vault's on-chain money manager before storing.
+  async function saveProfile() {
+    if (!connected?.account) return;
+    setProfileMsg('Sign to save…');
+    try {
+      const issuedAt = Date.now();
+      const message = `FBYT vault profile\nvault: ${vaultAddress}\nissued: ${issuedAt}`;
+      const sig = await signMessage.dispatchAsync(new TextEncoder().encode(message));
+      const signature = btoa(String.fromCharCode(...sig));
+      const res = await fetch(`/api/vaults/${vaultAddress}/metadata`, {
+        method: 'PUT',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ ...profile, signer: connected.account.address, signature, issuedAt }),
+      });
+      const j = await res.json();
+      if (!res.ok) throw new Error(j.error ?? 'save failed');
+      setProfileMsg('Profile saved.');
+    } catch (e) {
+      setProfileMsg(e instanceof Error ? e.message : String(e));
+    }
+  }
+
   async function advanceToTrading() {
     setAdvanceMsg('Advancing…');
     try {
@@ -246,6 +278,23 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
           {shortAddress(String(vault.data.moneyManager), 5, 5)}) to manage it.
         </div>
       ) : null}
+
+      <section className="card p-5">
+        <h2 className="mb-1 font-semibold">Vault profile</h2>
+        <p className="mb-3 text-sm opacity-60">
+          A public name, strategy, and description for this vault (stored off-chain). Saving requires a
+          signature from the manager wallet.
+        </p>
+        <div className="space-y-2">
+          <input className="input" placeholder="name" value={profile.name} disabled={!isManager} onChange={(e) => setProfile((p) => ({ ...p, name: e.target.value }))} />
+          <input className="input" placeholder="strategy (one line)" value={profile.strategy} disabled={!isManager} onChange={(e) => setProfile((p) => ({ ...p, strategy: e.target.value }))} />
+          <textarea className="input min-h-20" placeholder="description" value={profile.description} disabled={!isManager} onChange={(e) => setProfile((p) => ({ ...p, description: e.target.value }))} />
+        </div>
+        <button className="btn mt-3" disabled={!isManager} onClick={saveProfile}>
+          Save profile
+        </button>
+        {profileMsg ? <p className="mt-2 text-xs opacity-60">{profileMsg}</p> : null}
+      </section>
 
       <section className="card p-5">
         <h2 className="mb-1 font-semibold">Trading delegate</h2>

@@ -1,29 +1,31 @@
 import Link from 'next/link';
 import { serverRpc } from '@/lib/rpc-server';
 import { fetchVaults, sortVaults, type VaultSummary } from '@/lib/vaults';
+import { getAllMetadata, type VaultMetadata } from '@/lib/metadataStore';
 import { formatBps, formatMicroUsd, shortAddress, vaultStatusLabel } from '@/lib/format';
 import { RPC_URL } from '@/lib/config';
 
 export const dynamic = 'force-dynamic';
 
-async function loadVaults(): Promise<{ vaults?: VaultSummary[]; error?: string }> {
+async function loadVaults(): Promise<{ vaults?: VaultSummary[]; meta?: Record<string, VaultMetadata>; error?: string }> {
   try {
-    const vaults = await fetchVaults(serverRpc());
-    return { vaults: sortVaults(vaults) };
+    const [vaults, meta] = await Promise.all([fetchVaults(serverRpc()).then(sortVaults), getAllMetadata()]);
+    return { vaults, meta };
   } catch (e) {
     return { error: e instanceof Error ? e.message : String(e) };
   }
 }
 
-function VaultCard({ v }: { v: VaultSummary }) {
+function VaultCard({ v, meta }: { v: VaultSummary; meta?: VaultMetadata }) {
   const d = v.data;
   const status = vaultStatusLabel(d.vaultPoolStatus);
   return (
     <Link href={`/vaults/${v.address}`} className="card block p-4 hover:border-[#3b82f6]">
-      <div className="flex items-center justify-between">
-        <span className="font-mono text-sm">{shortAddress(v.address, 6, 6)}</span>
-        <span className="rounded bg-[#1a1f2b] px-2 py-0.5 text-xs opacity-80">{status}</span>
+      <div className="flex items-center justify-between gap-2">
+        <span className="truncate font-medium">{meta?.name || shortAddress(v.address, 6, 6)}</span>
+        <span className="shrink-0 rounded bg-[#1a1f2b] px-2 py-0.5 text-xs opacity-80">{status}</span>
       </div>
+      {meta?.strategy ? <div className="mt-0.5 text-xs opacity-50">{meta.strategy}</div> : null}
       <div className="mt-3 grid grid-cols-2 gap-2 text-sm">
         <Stat label="Raised" value={formatMicroUsd(d.raisedAmountUsd)} />
         <Stat label="Shares" value={d.totalShares.toLocaleString()} />
@@ -44,7 +46,7 @@ function Stat({ label, value }: { label: string; value: string }) {
 }
 
 export default async function Home() {
-  const { vaults, error } = await loadVaults();
+  const { vaults, meta, error } = await loadVaults();
 
   return (
     <div>
@@ -71,7 +73,7 @@ pnpm bootstrap`}
       ) : vaults && vaults.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2">
           {vaults.map((v) => (
-            <VaultCard key={v.address} v={v} />
+            <VaultCard key={v.address} v={v} meta={meta?.[v.address]} />
           ))}
         </div>
       ) : (

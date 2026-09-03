@@ -48,6 +48,10 @@ export function VaultDetail({ address }: { address: string }) {
     fetchMaybeVaultPool(client.rpc, vaultAddr),
   );
 
+  const { data: meta } = useSWR(['metadata', address], () =>
+    fetch(`/api/vaults/${address}/metadata`).then((r) => r.json()).then((j) => j.metadata as { name?: string; description?: string; strategy?: string } | null),
+  );
+
   const mintAddr = vault?.exists ? vault.data.tokenMint : undefined;
   const { data: mint } = useSWR(mintAddr ? ['mint', mintAddr] : null, () =>
     fetchMint(client.rpc, mintAddr!),
@@ -174,7 +178,11 @@ export function VaultDetail({ address }: { address: string }) {
     <div className="grid gap-6 md:grid-cols-3">
       <section className="md:col-span-2">
         <div className="mb-4 flex items-center justify-between">
-          <h1 className="font-mono text-lg">{shortAddress(address, 8, 8)}</h1>
+          <div>
+            <h1 className="text-lg font-semibold">{meta?.name || shortAddress(address, 8, 8)}</h1>
+            {meta?.name ? <p className="font-mono text-xs opacity-50">{shortAddress(address, 6, 6)}</p> : null}
+            {meta?.strategy ? <p className="text-xs opacity-60">{meta.strategy}</p> : null}
+          </div>
           <div className="flex items-center gap-3">
             <a href={`/manage/${address}`} className="text-xs text-[#3b82f6]">
               Manage
