@@ -60,5 +60,7 @@ a local faucet. See [`app/README.md`](./app/README.md) for setup and the run ste
   behaviors (a sub-token rounding in the token→USD conversion and the withdraw performance-fee model)
   are documented as known divergences rather than approximated (see `RPC_FINDINGS.md`).
 - Assessment: complete.
-- App: core investor and manager flows implemented and building against the generated client; the
-  manager trade and operator fee-withdrawal flows are scaffolded (instruction builders ready).
+- App: the full vault lifecycle works against a local surfnet — investors deposit and redeem, managers
+  set a trading delegate and trade (`swap`) through the bundled jupiter-mock, and the operator streams
+  the management fee. Each flow is verified headless by an `e2e:*` script that builds the same
+  instructions the UI does (see `app/README.md`).
