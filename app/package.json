@@ -20,7 +20,8 @@
     "e2e:close": "tsx scripts/e2e-close.ts",
     "e2e:metadata": "tsx scripts/e2e-metadata.ts",
     "set-delegate": "tsx scripts/set-delegate.ts",
-    "keeper": "tsx scripts/keeper.ts"
+    "keeper": "tsx scripts/keeper.ts",
+    "indexer": "tsx scripts/indexer.ts"
   },
   "dependencies": {
     "@solana-program/token": "^0.16.1",

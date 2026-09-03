@@ -28,6 +28,7 @@ import {
   oraclePoolAddress,
 } from '@/lib/program';
 import { fetchMaybeOraclePool } from '@/generated';
+import { NavChart } from '@/components/NavChart';
 import {
   formatBps,
   formatMicroUsd,
@@ -65,6 +66,11 @@ export function VaultDetail({ address }: { address: string }) {
   type Trade = { signature: string; blockTime: number | null; inputMint: string; outputMint: string; inputAmount: string; outputAmount: string; inputDecimals: number; outputDecimals: number };
   const { data: trades } = useSWR(['trades', address], () =>
     fetch(`/api/vaults/${address}/trades`).then((r) => (r.ok ? r.json().then((j) => j.trades as Trade[]) : [])),
+  );
+
+  type HistPoint = { t: number; navMicroUsd: string; raisedMicroUsd: string; pnlBps: number };
+  const { data: history } = useSWR(['history', address], () =>
+    fetch(`/api/vaults/${address}/history`).then((r) => (r.ok ? r.json().then((j) => j.series as HistPoint[]) : [])),
   );
 
   const mintAddr = vault?.exists ? vault.data.tokenMint : undefined;
@@ -217,6 +223,11 @@ export function VaultDetail({ address }: { address: string }) {
           <Stat label="Base mint" value={shortAddress(String(d.tokenMint), 5, 5)} />
           <Stat label="Manager" value={shortAddress(String(d.moneyManager), 5, 5)} />
           <Stat label="Open-ended" value={d.isOpenEnded ? 'Yes' : 'No'} />
+        </div>
+
+        <div className="card mt-4 p-5">
+          <h2 className="mb-3 font-semibold">NAV history</h2>
+          <NavChart series={history ?? []} />
         </div>
 
         <div className="card mt-4 p-5">
