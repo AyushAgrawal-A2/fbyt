@@ -34,6 +34,13 @@ export const USD_DECIMALS = 6;
 export const CLUSTER = process.env.NEXT_PUBLIC_CLUSTER ?? 'localnet';
 
 /**
+ * Trade through real Jupiter (quote + swap-instructions → on-chain route) instead of the localnet
+ * jupiter-mock. Off by default (localnet has no real liquidity); set on a devnet/mainnet deployment.
+ */
+export const USE_REAL_JUPITER =
+  (process.env.NEXT_PUBLIC_USE_REAL_JUPITER ?? '') === '1' || CLUSTER === 'mainnet' || CLUSTER === 'devnet';
+
+/**
  * Demo tradeable output asset seeded by `pnpm bootstrap` on the local surfnet. The manager UI trades
  * the vault's base token into this asset through the bundled jupiter-mock cloned at {@link JUPITER_PROGRAM_ID}.
  * `DEMO_OUT_MINT` is derived (PDA of the program) so it is always a valid address; its Pyth feed id and

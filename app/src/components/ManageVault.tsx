@@ -32,7 +32,10 @@ import {
   SYSTEM_PROGRAM_ID,
   TOKEN_PROGRAM_ID,
   TOKEN_2022_PROGRAM_ID,
+  USE_REAL_JUPITER,
 } from '@/lib/config';
+import { TRADABLE_ASSETS, assetByMint } from '@/lib/assets';
+import { fetchJupiterRoute } from '@/lib/jupiterRoute';
 import {
   ata,
   assetRegistryAddress,
@@ -66,6 +69,8 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
   const [delegate, setDelegate] = useState('');
   const [tradeIn, setTradeIn] = useState('');
   const [tradeOut, setTradeOut] = useState('');
+  const [jupOut, setJupOut] = useState(TRADABLE_ASSETS[0]?.mint ?? '');
+  const [jupIn, setJupIn] = useState('');
   const [advanceMsg, setAdvanceMsg] = useState<string | null>(null);
   const signMessage = useSignMessage(client);
   const [profile, setProfile] = useState({ name: '', description: '', strategy: '' });
@@ -173,6 +178,49 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
       [{ programAddress: base.programAddress, accounts: [...base.accounts, ...route] as AccountMeta[], data: base.data }],
       { abortSignal: signal },
     );
+    await mutate();
+    return String(res.context.signature);
+  });
+
+  // Real Jupiter (devnet/mainnet): fetch a quote + route, adapt it (jupiterRoute.ts), and pass the
+  // route's data + accounts to the on-chain swap. The output amount, price impact and fees come from
+  // Jupiter's quote — not an oracle mid — and both assets' oracles must already be onboarded.
+  const jupiterTradeAction = useAction(async (signal: AbortSignal, outputMintStr: string, inRaw: string) => {
+    if (!connected?.signer || !vault?.exists) throw new Error('Connect the manager wallet');
+    const d = vault.data;
+    const asset = assetByMint(outputMintStr);
+    if (!asset) throw new Error('unknown output asset');
+    const [adminPoolAddr] = await findAdminPoolPda({ programAddress: FBYT_PROGRAM_ID });
+    const admin = await fetchMaybeAdminPool(client.rpc, adminPoolAddr);
+    if (!admin.exists) throw new Error('Admin pool missing');
+    const outputMint = address(asset.mint);
+    const outputProgram = address(asset.tokenProgram);
+    const baseOracle = await oraclePoolAddress(d.adminPool, d.tokenMint);
+    const outOracle = await oraclePoolAddress(d.adminPool, outputMint);
+    const [basePool, outPool] = await Promise.all([
+      fetchMaybeOraclePool(client.rpc, baseOracle),
+      fetchMaybeOraclePool(client.rpc, outOracle),
+    ]);
+    if (!basePool.exists || !outPool.exists) throw new Error('Onboard approved oracles for both assets first (Admin)');
+    const basePrice = await canonicalPriceAccount(feedId32(basePool.data.feedId));
+    const outPrice = await canonicalPriceAccount(feedId32(outPool.data.feedId));
+    const assetRegistry = await assetRegistryAddress(vaultAddr);
+    const vaultInput = await ata(vaultAddr, d.tokenMint);
+    const vaultOutput = await ata(vaultAddr, outputMint);
+
+    // the real Jupiter route: quote (price impact + fees) -> swap-instructions -> adapted route
+    const route = await fetchJupiterRoute(String(d.tokenMint), asset.mint, inRaw, admin.data.maxSlippageBps, String(vaultAddr));
+    const base = getSwapInstruction({
+      adminPool: d.adminPool, admin: admin.data.admin, trader: connected.signer, tokenMint: d.tokenMint, vaultPool: vaultAddr,
+      assetRegistry, inputMint: d.tokenMint, inputMintProgram: TOKEN_PROGRAM_ID, outputMint, outputMintProgram: outputProgram,
+      vaultInputTokenAccount: vaultInput, vaultOutputTokenAccount: vaultOutput, oraclePoolFrom: baseOracle, oraclePoolTo: outOracle,
+      inputPriceUpdate: basePrice, outputPriceUpdate: outPrice, jupiterProgram: JUPITER_PROGRAM_ID, systemProgram: SYSTEM_PROGRAM_ID,
+      data: route.data,
+    });
+    // ensure the vault's output ATA exists (Token-2022 aware), then the swap with Jupiter's route accounts
+    const createOut = await getCreateAssociatedTokenIdempotentInstructionAsync({ payer: connected.signer, owner: vaultAddr, mint: outputMint, tokenProgram: outputProgram });
+    const swapIx = { programAddress: base.programAddress, accounts: [...base.accounts, ...route.remainingAccounts] as AccountMeta[], data: base.data };
+    const res = await client.sendTransaction([createOut, swapIx], { abortSignal: signal });
     await mutate();
     return String(res.context.signature);
   });
@@ -383,6 +431,38 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
         ) : null}
         {advanceMsg ? <p className="mt-2 text-xs opacity-60">{advanceMsg}</p> : null}
       </section>
+
+      {USE_REAL_JUPITER ? (
+        <section className="card p-5">
+          <h2 className="mb-1 font-semibold">Trade via Jupiter (real)</h2>
+          <p className="mb-3 text-sm opacity-60">
+            Routes through real Jupiter — the output amount, price impact and fees come from Jupiter’s
+            quote. The target asset must have an admin-approved oracle. Amount is in base-token units.
+          </p>
+          <div className="grid grid-cols-2 gap-2">
+            <select className="input" value={jupOut} onChange={(e) => setJupOut(e.target.value)}>
+              {TRADABLE_ASSETS.map((a) => (
+                <option key={a.mint} value={a.mint}>
+                  {a.symbol} — {a.name.slice(0, 28)}
+                </option>
+              ))}
+            </select>
+            <input className="input font-mono" placeholder="input amount (base units)" value={jupIn} onChange={(e) => setJupIn(e.target.value)} inputMode="numeric" />
+          </div>
+          <button
+            className="btn mt-2"
+            disabled={!isManager || jupiterTradeAction.isRunning || !jupIn || !jupOut}
+            onClick={() => jupiterTradeAction.dispatch(jupOut, jupIn)}
+          >
+            {jupiterTradeAction.isRunning ? 'Trading…' : 'Trade via Jupiter'}
+          </button>
+          {jupiterTradeAction.error ? (
+            <p className="mt-2 text-xs text-red-400">{String(jupiterTradeAction.error)}</p>
+          ) : jupiterTradeAction.data ? (
+            <p className="mt-2 text-xs text-emerald-400">Traded — {shortAddress(String(jupiterTradeAction.data), 6, 6)}</p>
+          ) : null}
+        </section>
+      ) : null}
 
       {isManager && outMint ? (
         <BotsPanel vault={vaultAddress} baseMint={String(vault.data.tokenMint)} outMint={outMint} />

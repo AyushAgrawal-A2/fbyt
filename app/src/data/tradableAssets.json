@@ -1,0 +1,522 @@
+[
+{
+"symbol": "2Z",
+"name": "DoubleZero",
+"mint": "J6pQQ3FAcJQeWPPGppWRb4nM8jU3wLyYbRrLh7feMfvd",
+"decimals": 8,
+"pythFeedId": "f2b3ab1c49e35e881003c3c0482d18b181a1560b697b844c24c8f85aba1cab95",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": null
+},
+{
+"symbol": "AAPL",
+"name": "APPLE INC / US DOLLAR",
+"mint": "XsbEhLAtcf6HdfpFZ5xEMdqW8nfAvcsP5bdudRLJzJp",
+"decimals": 8,
+"pythFeedId": "978e6cc68a119ce066aa830017318563a9ed04ec3a0a6439010fc11296a58675",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/AAPLx.png"
+},
+{
+"symbol": "AMZN",
+"name": "AMAZON.COM, INC. / US DOLLAR",
+"mint": "Xs3eBt7uRfJX8QUs4suhyU8p2M6DoUDrJyWBa8LLZsg",
+"decimals": 8,
+"pythFeedId": "7148fbe6e493ff2580305c92a8d7f8628c9943b11b9b253aebc24863fec290e8",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/AMZNx.png"
+},
+{
+"symbol": "AUSD",
+"name": "Agora Dollar",
+"mint": "AUSD1jCcCyPLybk1YnvPWsHQSrZ46dxwoMniN4N2UEB9",
+"decimals": 6,
+"pythFeedId": "d9912df360b5b7f21a122f15bdd5e27f62ce5e72bd316c291f7c86620e07fb2a",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/39284/small/AUSD_1024px.png?1764684132"
+},
+{
+"symbol": "AVAX",
+"name": "AVAX (Allbridge from Avalanche)",
+"mint": "avaxGHCq3T7hoxd73oY2KY9hJSTaeMibXvHy5KNzh5D",
+"decimals": 9,
+"pythFeedId": "93da3352f9f1d105fdfe4971cfa80e9dd777bfc5d0f683ebb6e1294b92137bb7",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://assets.coingecko.com/coins/images/12559/small/coin-round-red.png"
+},
+{
+"symbol": "BAT",
+"name": "Basic Attention Token (Portal)",
+"mint": "EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz",
+"decimals": 8,
+"pythFeedId": "8e860fb74e60e5736b455d82f60b3728049c348e94961add5f961b02fdee2535",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPeUFDgHRxs9xxEPVaL6kfGQvCon7jmAWKVUHuux1Tpz/logo.png"
+},
+{
+"symbol": "BNB",
+"name": "Binance Coin (Portal)",
+"mint": "9gP2kCy3wA1ctvYWQk75guqXuHfrEomqydHLtcTCqiLa",
+"decimals": 8,
+"pythFeedId": "2f95862b045670cd22bee3114c39763a4a08beeb663b145d283c31d7d1101c4f",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/9gP2kCy3wA1ctvYWQk75guqXuHfrEomqydHLtcTCqiLa/logo.png"
+},
+{
+"symbol": "BONK",
+"name": "Bonk",
+"mint": "DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263",
+"decimals": 5,
+"pythFeedId": "72b021217ca3fe68922a19aaf990109cb9d84e9ad004b4d2025ad6f529314419",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/28600/small/bonk.jpg?1696527587"
+},
+{
+"symbol": "CAKE",
+"name": "PancakeSwap",
+"mint": "4qQeZ5LwSz6HuupUu8jCtgXyW1mYQcNbFAW1sWZp89HL",
+"decimals": 9,
+"pythFeedId": "2356af9529a1064d41e32d617e2ce1dca5733afa901daba9e2b68dee5d53ecf9",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/12632/small/pancakeswap-cake-logo_%281%29.png?1696512440"
+},
+{
+"symbol": "COIN",
+"name": "COINBASE GLOBAL INC / US DOLLAR",
+"mint": "Xs7ZdzSHLU9ftNJsii5fCeJhoRWSC32SQGzGQtePxNu",
+"decimals": 8,
+"pythFeedId": "641435d5dffb5311140b480517c79986d8488d5cf08a11eec53b83ad02cab33f",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/COINx.png"
+},
+{
+"symbol": "CRCL",
+"name": "CIRCLE INTERNET GROUP INC / US DOLLAR",
+"mint": "XsueG8BtpquVJX9LVLLEGuViXUungE6WmK5YZ3p3bd1",
+"decimals": 8,
+"pythFeedId": "c13184461c0c80d98ffcd89be627c2220b94a96c7c67f0c4b16bc12fd3b17758",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/CRCLx.png"
+},
+{
+"symbol": "DAI",
+"name": "Dai Stablecoin (Portal)",
+"mint": "EjmyN6qEC1Tf1JxiG1ae7UTJhUxSwk1TCWNWqxWV4J6o",
+"decimals": 8,
+"pythFeedId": "b0948a5e5313200c632b51bb5ca32f6de0d36e9950a942d19751e833f70dabfd",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EjmyN6qEC1Tf1JxiG1ae7UTJhUxSwk1TCWNWqxWV4J6o/logo.png"
+},
+{
+"symbol": "EURC",
+"name": "EURC",
+"mint": "HzwqbKZw8HxMN6bF2yFZNrht3c2iXXzpKcFu7uBEDKtr",
+"decimals": 6,
+"pythFeedId": "76fa85158bf14ede77087fe3ae472f66213f6ea2f5b411cb2de472794990fa5c",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://www.circle.com/hubfs/Brand/EURC/EURC-icon_128x128.png"
+},
+{
+"symbol": "FARTCOIN",
+"name": "Fartcoin",
+"mint": "9BB6NFEcjBCtnNLFko2FqVQBq8HHM13kCyYcdQbgpump",
+"decimals": 6,
+"pythFeedId": "58cd29ef0e714c5affc44f269b2c1899a52da4169d7acc147b9da692e6953608",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/50891/small/fart.jpg?1729503972"
+},
+{
+"symbol": "FDUSD",
+"name": "First Digital USD",
+"mint": "9zNQRsGLjNKwCUU5Gq5LR8beUCPzQMVMqKAi3SSZh54u",
+"decimals": 6,
+"pythFeedId": "ccdc1a08923e2e4f4b1e6ea89de6acbc5fe1948e9706f5604b8cb50bc1ed3979",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/31079/small/FDUSD_icon_black.png?1731097953"
+},
+{
+"symbol": "FLUID",
+"name": "Fluid",
+"mint": "DuEy8wWrzCUun5ZbbG9hkVqXqqicpTQw8gB7nEAzpCHQ",
+"decimals": 9,
+"pythFeedId": "47d462d8bac4c29b6ae1792029b9b92c8adea12ed22155bfc22f481287f1e349",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/39879/small/_FPT.png?1724618808"
+},
+{
+"symbol": "GLD",
+"name": "SPDR GOLD SHARES ETF / US DOLLAR",
+"mint": "Xsv9hRk1z5ystj9MhnA7Lq4vjSsLwzL2nxrwmwtD3re",
+"decimals": 8,
+"pythFeedId": "e190f467043db04548200354889dfe0d9d314c08b8d4e62fabf4d5a3140fecca",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/GLDx.png"
+},
+{
+"symbol": "GOOGL",
+"name": "ALPHABET INC CLASS A / US DOLLAR",
+"mint": "XsCPL9dNWBMvFtTmwcCA5v3xWPSMEBCszbQdiLLq6aN",
+"decimals": 8,
+"pythFeedId": "b911b0329028cd0283e4259c33809d62942bd2716a58084e5f31d64c00b5424e",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/GOOGLx.png"
+},
+{
+"symbol": "HNT",
+"name": "Helium",
+"mint": "hntyVP6YFm1Hg25TN9WGLqM12b8TQmcknKrdu1oxWux",
+"decimals": 8,
+"pythFeedId": "649fdd7ec08e8e2a20f425729854e90293dcbe2376abc47197a14da6ff339756",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/4284/large/helium_logo_use.png?1748092589"
+},
+{
+"symbol": "HYPE",
+"name": "Hyperliquid",
+"mint": "98sMhvDwXj1RQi5c5Mndm3vPe9cBqPrbLaufMXFNMh5g",
+"decimals": 9,
+"pythFeedId": "4279e31cc369bbcc2faf022b382b080e32a8e689ff20fbc530d2a603eb6cd98b",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/50882/small/hyperliquid.jpg?1729431300"
+},
+{
+"symbol": "JITOSOL",
+"name": "Jito Staked SOL",
+"mint": "J1toso1uCk3RLmjorhTtrVwY9HJ7X8V9yYac6Y7kGCPn",
+"decimals": 9,
+"pythFeedId": "67be9f519b95cf24338801051f9a808eff0a578ccb388db73b7f6fe1de019ffb",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://storage.googleapis.com/token-metadata/JitoSOL-256.png"
+},
+{
+"symbol": "JUP",
+"name": "Jupiter",
+"mint": "JUPyiwrYJFskUPiHa7hkeR8VUtAeFoSYbKedZNsDvCN",
+"decimals": 6,
+"pythFeedId": "0a0408d619e9380abad35060f9192039ed5042fa6f82301d0e48bb52be830996",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://static.jup.ag/jup/icon.png"
+},
+{
+"symbol": "JUPSOL",
+"name": "Jupiter Staked SOL",
+"mint": "jupSoLaHXQiZZTSfEWMTRRgpnyFm8f6sZdosWBjx93v",
+"decimals": 9,
+"pythFeedId": "f8d8d6b6c866c8b2624fb5b679ae846738725e5fc887fa8e927c8d8645018a2b",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://static.jup.ag/jupSOL/icon.png"
+},
+{
+"symbol": "KMNO",
+"name": "Kamino",
+"mint": "KMNo3nJsBXfcpJTVhZcXLW7RmTwTt4GVFE7suUBo9sS",
+"decimals": 6,
+"pythFeedId": "b17e5bc5de742a8a378b54c9c75442b7d51e30ada63f28d9bd28d3c0e26511a0",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://cdn.kamino.finance/kamino.svg"
+},
+{
+"symbol": "LINK",
+"name": "Chainlink",
+"mint": "LinkhB3afbBKb2EQQu7s7umdZceV3wcvAUJhQAfQ23L",
+"decimals": 9,
+"pythFeedId": "8ac0c70fff57e9aefdf5edf44b51d62c2d433653cbb2cf5cc06bb115af04d221",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/877/small/Chainlink_Logo_500.png?1760023405"
+},
+{
+"symbol": "META",
+"name": "Meta xStock",
+"mint": "Xsa62P5mvPszXL1krVUnU5ar38bBSVcWAB6fmPCo5Zu",
+"decimals": 9,
+"pythFeedId": "bf3e5871be3f80ab7a4d1f1fd039145179fb58569e159aee1ccd472868ea5900",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/METAx.png"
+},
+{
+"symbol": "MSOL",
+"name": "Marinade staked SOL",
+"mint": "mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So",
+"decimals": 9,
+"pythFeedId": "c2289a6a43d2ce91c6f55caec370f4acc38a2ed477f58813334c6d03749ff2a4",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So/logo.png"
+},
+{
+"symbol": "MSTR",
+"name": "MICROSTRATEGY INC. - CLASS A / US DOLLAR",
+"mint": "XsP7xzNPvEHS1m6qfanPUGjNmdnmsLKEoNAnHjdxxyZ",
+"decimals": 8,
+"pythFeedId": "53f95ba4e23ed15ea56083e2ee9a5eec48055d6f59033d4bb95f1ca2a2349c28",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/MSTRx.png"
+},
+{
+"symbol": "NEAR",
+"name": "NEAR (Allbridge from Near)",
+"mint": "3ZLekZYq2qkZiSpnSvabjit34tUkjSwD1JFuW9as9wBG",
+"decimals": 9,
+"pythFeedId": "c415de8d2eba7db216527dff4b60e8f3a5311c740dadb233e13e12547e226750",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/BYPsjxa3YuZESQz1dKuBw1QSFCSpecsm8nCQhY5xbU1Z/logo.png"
+},
+{
+"symbol": "NVDA",
+"name": "NVIDIA CORP / US DOLLAR",
+"mint": "Xsc9qvGR1efVDFGLrVsmkzv3qi45LTBjeUKSPmx9qEh",
+"decimals": 8,
+"pythFeedId": "4244d07890e4610f46bbde67de8f43a4bf8b569eebe904f136b469f148503b7f",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/NVDAx.png"
+},
+{
+"symbol": "ORCA",
+"name": "Orca",
+"mint": "orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE",
+"decimals": 6,
+"pythFeedId": "37505261e557e251290b8c8899453064e8d760ed5c65a779726f2490980da74c",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/orcaEKTdK7LKz57vaAYr9QeNsVEPfiu6QeMU1kektZE/logo.png"
+},
+{
+"symbol": "PAXG",
+"name": "PAX Gold",
+"mint": "5GgRAEmv8ZxF2PR5hY72Qs5x1bnQ6UK2RbTPoqJ3wSwW",
+"decimals": 6,
+"pythFeedId": "273717b49430906f4b0c230e99aa1007f83758e3199edbc887c0d06c3e332494",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Crypto",
+"iconUrl": "https://424565.fs1.hubspotusercontent-na1.net/hubfs/424565/PAXG%20Metadata%202026/PAXG-Symbol-512x512px-Circle.png"
+},
+{
+"symbol": "PENGU",
+"name": "Pudgy Penguins",
+"mint": "2zMMhcVQEXDtdE6vsFS7S7D5oUodfJHE8vd1gnBouauv",
+"decimals": 6,
+"pythFeedId": "bed3097008b9b5e3c93bec20be79cb43986b85a996475589351a21e67bae9b61",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/52622/small/PUDGY_PENGUINS_PENGU_PFP.png?1733809110"
+},
+{
+"symbol": "POPCAT",
+"name": "Popcat",
+"mint": "7GCihgDB8fe6KNjn2MYtkzZcRjQy3t9GHdC8uHYmW2hr",
+"decimals": 9,
+"pythFeedId": "b9312a7ee50e189ef045aa3c7842e099b061bd9bdc99ac645956c3b660dc8cce",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://bafkreidvkvuzyslw5jh5z242lgzwzhbi2kxxnpkic5wsvyno5ikvpr7reu.ipfs.nftstorage.link"
+},
+{
+"symbol": "PUMP",
+"name": "Pump.fun",
+"mint": "pumpCmXqMfrsAkQ5r49WcJnRayYRqmXz6ae8H7H9Dfn",
+"decimals": 6,
+"pythFeedId": "7a01fca212788bba7c5bf8c9efd576a8a722f070d2c17596ff7bb609b8d5c3b9",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/67164/small/pump.jpg?1751949376"
+},
+{
+"symbol": "PYTH",
+"name": "Pyth Network",
+"mint": "HZ1JovNiVvGrGNiiYvEozEVgZ58xaU3RKwX8eACQBCt3",
+"decimals": 6,
+"pythFeedId": "0bbf28e9a841a1cc788f6a361b17ca072d0ea3098a1e5df1c3922d06719579ff",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://pyth.network/token.svg"
+},
+{
+"symbol": "PYUSD",
+"name": "PayPal USD",
+"mint": "2b1kV6DkPAnxd5ixfnxCpjxmKwqjjaYmCZfHsFu24GXo",
+"decimals": 6,
+"pythFeedId": "c1da1b73d7f01e7ddd54b3766cf7fcd644395ad14f70aa706ec5384c59e76692",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Crypto",
+"iconUrl": "https://424565.fs1.hubspotusercontent-na1.net/hubfs/424565/PYUSDLOGO.png"
+},
+{
+"symbol": "QQQ",
+"name": "INVESCO QQQ TRUST SERIES 1 / US DOLLAR",
+"mint": "Xs8S1uUs1zvS2p7iwtsG3b6fkhpvmwz4GYU3gWAmWHZ",
+"decimals": 8,
+"pythFeedId": "178a6f73a5aede9d0d682e86b0047c9f333ed0efe5c6537ca937565219c4054d",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/QQQx.png"
+},
+{
+"symbol": "RAY",
+"name": "Raydium",
+"mint": "4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R",
+"decimals": 6,
+"pythFeedId": "91568baa8beb53db23eb3fb7f22c6e8bd303d103919e19733f2bb642d3e7987a",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/4k3Dyjzvzp8eMZWUXbBCjEvwSkkk59S5iCNLY3QrkX6R/logo.png"
+},
+{
+"symbol": "SOL",
+"name": "Wrapped SOL",
+"mint": "So11111111111111111111111111111111111111112",
+"decimals": 9,
+"pythFeedId": "ef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/So11111111111111111111111111111111111111112/logo.png"
+},
+{
+"symbol": "SPY",
+"name": "SPY / US DOLLAR",
+"mint": "XsoCS1TfEyfFhfvj8EtZ528L3CaKBDBRqRapnBbDF2W",
+"decimals": 8,
+"pythFeedId": "2817b78438c769357182c04346fddaad1178c82f4048828fe0997c3c64624e14",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/SPYx.png"
+},
+{
+"symbol": "TSLA",
+"name": "TESLA INC / US DOLLAR",
+"mint": "XsDoVfqeBukxuZHWhdvWHBhgEHjGNst4MLodqsJHzoB",
+"decimals": 8,
+"pythFeedId": "47a156470288850a440df3a6ce85a55917b813a19bb5b31128a33a986566a362",
+"tokenProgram": "TokenzQdBNbLqP5VEhdkAS6EPFLC1PHnBqCXEpPxuEb",
+"assetType": "Equity",
+"iconUrl": "https://xstocks-metadata.backed.fi/logos/tokens/TSLAx.png"
+},
+{
+"symbol": "UNI",
+"name": "Uniswap (Portal)",
+"mint": "8FU95xFJhUUkyyCLU13HSzDLs7oC4QZdXQHL6SCeab36",
+"decimals": 8,
+"pythFeedId": "78d185a741d07edb3412b09008b7c5cfb9bbbd7d568bf00ba737b456ba171501",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/8FU95xFJhUUkyyCLU13HSzDLs7oC4QZdXQHL6SCeab36/logo.png"
+},
+{
+"symbol": "USD1",
+"name": "World Liberty Financial USD",
+"mint": "USD1ttGY1N17NEEHLmELoaybftRBUSErhqYiQzvEmuB",
+"decimals": 6,
+"pythFeedId": "0a2425d43486780990d8b63543029e20556be51fd756cca584212f4d539611d4",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/53485/small/USD1-Shield-Icon-Primary-Coral-White-RGB.png?1737197512"
+},
+{
+"symbol": "USDC",
+"name": "USD Coin",
+"mint": "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
+"decimals": 6,
+"pythFeedId": "eaa020c61cc479712813461ce153894a96a6c00b21ed0cfc2798d1f9a9e9c94a",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v/logo.png"
+},
+{
+"symbol": "USDE",
+"name": "Ethena USDe",
+"mint": "DEkqHyPN7GMRJ5cArtQFAWefqbZb33Hyf6s5iCwjEonT",
+"decimals": 9,
+"pythFeedId": "6ec879b1e9963de5ee97e9c8710b742d6228252a5e2ca12d4ae81d7fe5ee8c5d",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/33613/small/usde.png?1733810059"
+},
+{
+"symbol": "USDT",
+"name": "USDT",
+"mint": "Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB",
+"decimals": 6,
+"pythFeedId": "2b89b9dc8fdf9f34709a5b106b472f0f39bb6ca9ce04b0fd7f2e971688e2e53b",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB/logo.svg"
+},
+{
+"symbol": "USDY",
+"name": "Ondo US Dollar Yield",
+"mint": "A1KLoBrKBde8Ty9qtNQUtq3C2ortoC3u7twggz7sEto6",
+"decimals": 6,
+"pythFeedId": "e393449f6aff8a4b6d3e1165a7c9ebec103685f3b41e60db4277b5b6d10e7326",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/31700/small/usdy_(1).png?1696530524"
+},
+{
+"symbol": "WBTC",
+"name": "Wrapped BTC",
+"mint": "3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh",
+"decimals": 8,
+"pythFeedId": "c9d8b075a5c69303365ae23633d4e085199bf5c520a3b90fed1322a0342ffc33",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/3NZ9JMVBmGAqocybic2c7LQCJScmgsAZ6vQqTDzcqmJh/logo.png"
+},
+{
+"symbol": "WETH",
+"name": "Wrapped ETH",
+"mint": "7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs",
+"decimals": 8,
+"pythFeedId": "9d4294bbcd1174d6f2003ec365831e64cc31d9f6f15a2b85399db8d5000960f6",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://raw.githubusercontent.com/solana-labs/token-list/main/assets/mainnet/7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs/logo.png"
+},
+{
+"symbol": "WIF",
+"name": "dogwifhat",
+"mint": "EKpQGSJtjMFqKZ9KQanSqYXRcF8fBopzLHYxdM65zcjm",
+"decimals": 6,
+"pythFeedId": "4ca4beeca86f0d164160323817a4e42b10010a724c2217c6ee41b54cd4cc61fc",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://coin-images.coingecko.com/coins/images/33566/small/dogwifhat.jpg?1702499428"
+},
+{
+"symbol": "ZEC",
+"name": "Zcash",
+"mint": "A7bdiYdS5GjqGFtxf17ppRHtDKPkkRqbKtR27dxvQXaS",
+"decimals": 8,
+"pythFeedId": "be9b59d178f0d6a97ab4c343bff2aa69caa1eaae3e9048a65788c529b125bb24",
+"tokenProgram": "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA",
+"assetType": "Crypto",
+"iconUrl": "https://arweave.net/QSYqnmB7NYlB7n1R6rz935Y07dlRK0tIuKe2mof5Sho"
+}
+]

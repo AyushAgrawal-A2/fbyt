@@ -222,23 +222,69 @@ struct Ctx {
 }
 
 #[allow(clippy::too_many_arguments)]
+/// True when the keeper should trade through real Jupiter (quote + swap-instructions) instead of the
+/// localnet jupiter-mock.
+fn use_real_jupiter() -> bool {
+    std::env::var("USE_REAL_JUPITER").map(|v| v == "1").unwrap_or(false)
+}
+
+/// The mock route: `[input_amount, output_amount]` LE data + the 7 accounts the jupiter-mock consumes.
+fn mock_route(ctx: &Ctx, input_mint: &Pubkey, output_mint: &Pubkey, input_amount: u128, output_amount: u128) -> (Vec<u8>, Vec<AccountMeta>) {
+    let pool = jupiter_pool_pda();
+    let vault_input = ata(&ctx.vault, input_mint);
+    let vault_output = ata(&ctx.vault, output_mint);
+    let mut data = (input_amount as u64).to_le_bytes().to_vec();
+    data.extend_from_slice(&(output_amount as u64).to_le_bytes());
+    let route = vec![
+        AccountMeta::new_readonly(TOKEN_PROGRAM, false),
+        AccountMeta::new(vault_input, false),
+        AccountMeta::new(ata(&pool, input_mint), false),
+        AccountMeta::new(ata(&pool, output_mint), false),
+        AccountMeta::new(vault_output, false),
+        AccountMeta::new_readonly(ctx.vault, false),
+        AccountMeta::new_readonly(pool, false),
+    ];
+    (data, route)
+}
+
+/// A real Jupiter route: quote (price impact + fees) -> swap-instructions with the vault PDA as the
+/// user -> adapted route data + accounts (the vault-PDA signer flag downgraded — the program CPI-signs).
+fn jupiter_route(vault: &Pubkey, input: &Pubkey, output: &Pubkey, amount: u128, slippage_bps: u64) -> Result<(Vec<u8>, Vec<AccountMeta>), Box<dyn std::error::Error>> {
+    use base64::Engine;
+    let http = reqwest::blocking::Client::new();
+    let dexes = std::env::var("JUP_DEXES").unwrap_or_else(|_| "Whirlpool".into());
+    let quote: Value = http
+        .get(format!("https://lite-api.jup.ag/swap/v1/quote?inputMint={input}&outputMint={output}&amount={amount}&slippageBps={slippage_bps}&onlyDirectRoutes=true&dexes={dexes}"))
+        .send()?.json()?;
+    let six: Value = http
+        .post("https://lite-api.jup.ag/swap/v1/swap-instructions")
+        .json(&json!({ "quoteResponse": quote, "userPublicKey": vault.to_string(), "wrapAndUnwrapSol": false, "useSharedAccounts": true }))
+        .send()?.json()?;
+    let jix = six.get("swapInstruction").ok_or("no swapInstruction from Jupiter")?;
+    let data = base64::engine::general_purpose::STANDARD.decode(jix["data"].as_str().ok_or("no data")?)?;
+    let mut route = vec![];
+    for a in jix["accounts"].as_array().ok_or("no accounts")? {
+        let pk = Pubkey::from_str(a["pubkey"].as_str().ok_or("no pubkey")?)?;
+        let is_signer = if pk == *vault { false } else { a["isSigner"].as_bool().unwrap_or(false) };
+        let is_writable = a["isWritable"].as_bool().unwrap_or(false);
+        route.push(if is_writable { AccountMeta::new(pk, is_signer) } else { AccountMeta::new_readonly(pk, is_signer) });
+    }
+    Ok((data, route))
+}
+
+#[allow(clippy::too_many_arguments)]
 fn send_swap(
     program: &anchor_client::Program<Rc<Keypair>>,
     ctx: &Ctx,
     delegate: &Pubkey,
     input_mint: Pubkey,
     output_mint: Pubkey,
-    input_amount: u128,
-    output_amount: u128,
+    output_program: Pubkey,
     from: &PriceInfo,
     to: &PriceInfo,
+    data: Vec<u8>,
+    route: Vec<AccountMeta>,
 ) -> Result<String, Box<dyn std::error::Error>> {
-    let pool = jupiter_pool_pda();
-    let vault_input = ata(&ctx.vault, &input_mint);
-    let vault_output = ata(&ctx.vault, &output_mint);
-    let input_sink = ata(&pool, &input_mint);
-    let output_source = ata(&pool, &output_mint);
-
     let accts = fbyt_vault::accounts::Swap {
         admin_pool: ctx.vaultpool.admin_pool,
         admin: ctx.admin.admin,
@@ -249,9 +295,9 @@ fn send_swap(
         input_mint,
         input_mint_program: TOKEN_PROGRAM,
         output_mint,
-        output_mint_program: TOKEN_PROGRAM,
-        vault_input_token_account: vault_input,
-        vault_output_token_account: vault_output,
+        output_mint_program: output_program,
+        vault_input_token_account: ata(&ctx.vault, &input_mint),
+        vault_output_token_account: ata(&ctx.vault, &output_mint),
         oracle_pool_from: from.oracle_pool,
         oracle_pool_to: to.oracle_pool,
         input_price_update: from.price_acct,
@@ -260,17 +306,7 @@ fn send_swap(
         system_program: SYSTEM_PROGRAM,
     };
     let mut metas = accts.to_account_metas(None);
-    metas.extend([
-        AccountMeta::new_readonly(TOKEN_PROGRAM, false),
-        AccountMeta::new(vault_input, false),
-        AccountMeta::new(input_sink, false),
-        AccountMeta::new(output_source, false),
-        AccountMeta::new(vault_output, false),
-        AccountMeta::new_readonly(ctx.vault, false),
-        AccountMeta::new_readonly(pool, false),
-    ]);
-    let mut data = (input_amount as u64).to_le_bytes().to_vec();
-    data.extend_from_slice(&(output_amount as u64).to_le_bytes());
+    metas.extend(route);
     let ix = Instruction {
         program_id: ctx.program_id,
         accounts: metas,
@@ -374,29 +410,29 @@ fn run_once(delegate_path: &str) -> Result<(), Box<dyn std::error::Error>> {
                     &output_mint,
                     &oracle_of(&output_mint)?,
                 )?;
-                let output_amount = fair_output(input_amount, &from, &to, slip);
-                if output_amount == 0 {
-                    return Ok(None);
-                }
-                let sig = send_swap(
-                    &program,
-                    &ctx,
-                    &delegate_pk,
-                    input_mint,
-                    output_mint,
-                    input_amount,
-                    output_amount,
-                    &from,
-                    &to,
-                )?;
+                // real Jupiter: take the route (and honor its quote/minOut) from swap-instructions;
+                // localnet mock: value the output at oracle mid and use the mock's fixed route.
+                let (data, route, output_program, output_label): (Vec<u8>, Vec<AccountMeta>, Pubkey, String) = if use_real_jupiter() {
+                    let (data, route) = jupiter_route(&ctx.vault, &input_mint, &output_mint, input_amount, slip)?;
+                    let output_program = rpc.get_account(&output_mint)?.owner; // Token or Token-2022
+                    (data, route, output_program, "jupiter".to_string())
+                } else {
+                    let output_amount = fair_output(input_amount, &from, &to, slip);
+                    if output_amount == 0 {
+                        return Ok(None);
+                    }
+                    let (data, route) = mock_route(&ctx, &input_mint, &output_mint, input_amount, output_amount);
+                    (data, route, TOKEN_PROGRAM, output_amount.to_string())
+                };
+                let sig = send_swap(&program, &ctx, &delegate_pk, input_mint, output_mint, output_program, &from, &to, data, route)?;
                 println!(
-                    "  swap {input_amount} {}… -> {output_amount} {}…  {}",
+                    "  swap {input_amount} {}… -> {output_label} {}…  {}",
                     &input_mint.to_string()[..4],
                     &output_mint.to_string()[..4],
                     &sig[..12]
                 );
                 Ok(Some(
-                    json!({ "inputMint": input_mint.to_string(), "outputMint": output_mint.to_string(), "inputAmount": input_amount.to_string(), "outputAmount": output_amount.to_string(), "signature": sig }),
+                    json!({ "inputMint": input_mint.to_string(), "outputMint": output_mint.to_string(), "inputAmount": input_amount.to_string(), "outputAmount": output_label, "signature": sig }),
                 ))
             };
 
