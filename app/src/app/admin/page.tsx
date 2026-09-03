@@ -11,6 +11,9 @@ import {
   findAdminPoolPda,
   getCreateOraclePoolInstructionAsync,
   getApproveOraclePoolInstructionAsync,
+  getUpdateOraclePoolInstructionAsync,
+  getCloseOraclePoolInstructionAsync,
+  getGetPriceInfoInstructionAsync,
   getAdminModifyFeeInstructionAsync,
   getAdminUpdateOperatorInstructionAsync,
   getAdminTransferOwnershipInstructionAsync,
@@ -27,7 +30,7 @@ import {
 } from '@/generated';
 import { client } from '@/app/providers';
 import { FBYT_PROGRAM_ID } from '@/lib/config';
-import { oraclePoolAddress } from '@/lib/program';
+import { oraclePoolAddress, canonicalPriceAccount, feed32FromHex } from '@/lib/program';
 import { shortAddress } from '@/lib/format';
 
 export default function AdminPage() {
@@ -121,6 +124,30 @@ export default function AdminPage() {
               ixs.push(await getCreateOraclePoolInstructionAsync({ requester: signer, tokenMint, feedId: feed }));
             ixs.push(await getApproveOraclePoolInstructionAsync({ admin: signer, tokenMint }));
             return ixs;
+          })
+        }
+      />
+
+      <OracleManage
+        disabled={!isAdmin || runTx.isRunning}
+        onUpdate={(mint, feedId) =>
+          runTx.dispatch(async () => {
+            if (!signer) throw new Error('Connect the admin wallet');
+            return [await getUpdateOraclePoolInstructionAsync({ admin: signer, tokenMint: address(mint.trim()), feedId: `0x${feedId.trim().replace(/^0x/, '')}` })];
+          })
+        }
+        onClose={(mint) =>
+          runTx.dispatch(async () => {
+            if (!signer) throw new Error('Connect the admin wallet');
+            return [await getCloseOraclePoolInstructionAsync({ admin: signer, tokenMint: address(mint.trim()) })];
+          })
+        }
+        onCheck={(feedId) =>
+          runTx.dispatch(async () => {
+            if (!signer) throw new Error('Connect a wallet');
+            const feed = feedId.trim().replace(/^0x/, '');
+            const priceUpdate = await canonicalPriceAccount(feed32FromHex(feed));
+            return [await getGetPriceInfoInstructionAsync({ payer: signer, priceUpdate, feedId: `0x${feed}` })];
           })
         }
       />
@@ -271,6 +298,39 @@ function OracleOnboarding({ disabled, onSubmit }: { disabled: boolean; onSubmit:
       <button className="btn mt-3" disabled={disabled || !mint || !feed} onClick={() => onSubmit(mint, feed)}>
         Onboard &amp; approve
       </button>
+    </section>
+  );
+}
+
+function OracleManage({
+  disabled,
+  onUpdate,
+  onClose,
+  onCheck,
+}: {
+  disabled: boolean;
+  onUpdate: (mint: string, feedId: string) => void;
+  onClose: (mint: string) => void;
+  onCheck: (feedId: string) => void;
+}) {
+  const [mint, setMint] = useState('');
+  const [feed, setFeed] = useState('');
+  return (
+    <section className="card p-5">
+      <h2 className="mb-1 font-semibold">Manage an existing oracle</h2>
+      <p className="mb-3 text-sm opacity-60">
+        Re-point a feed (update_oracle_pool), retire an asset (close_oracle_pool), or verify a feed is
+        live and fresh before onboarding (get_price_info logs the price on-chain).
+      </p>
+      <div className="grid gap-2 sm:grid-cols-2">
+        <input className="input font-mono" placeholder="token mint" value={mint} onChange={(e) => setMint(e.target.value)} />
+        <input className="input font-mono" placeholder="pyth feed id (32-byte hex)" value={feed} onChange={(e) => setFeed(e.target.value)} />
+      </div>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button className="btn btn-ghost" disabled={disabled || !mint || !feed} onClick={() => onUpdate(mint, feed)}>Update feed</button>
+        <button className="btn btn-ghost text-red-300" disabled={disabled || !mint} onClick={() => onClose(mint)}>Close oracle</button>
+        <button className="btn btn-ghost" disabled={disabled || !feed} onClick={() => onCheck(feed)}>Check price</button>
+      </div>
     </section>
   );
 }

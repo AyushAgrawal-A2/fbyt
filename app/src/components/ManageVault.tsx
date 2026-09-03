@@ -22,6 +22,7 @@ import {
   getRevokeTradingDelegateInstruction,
   getSwapInstruction,
   getWithdrawMoneyManagementFeeInstructionAsync,
+  getCloseVaultInstructionAsync,
 } from '@/generated';
 import { client } from '@/app/providers';
 import { shortAddress } from '@/lib/format';
@@ -198,6 +199,20 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
     return String(res.context.signature);
   });
 
+  // Manager-only, past the fundraise: soft-close the vault (status → Closed). The program enforces the
+  // timing and rejects a second close.
+  const closeAction = useAction(async (signal: AbortSignal) => {
+    if (!connected?.signer || !vault?.exists) throw new Error('Connect the manager wallet');
+    const ix = await getCloseVaultInstructionAsync({
+      moneyManager: connected.signer,
+      vaultPool: vaultAddr,
+      tokenMint: vault.data.tokenMint,
+    });
+    const res = await client.sendTransaction([ix], { abortSignal: signal });
+    await mutate();
+    return String(res.context.signature);
+  });
+
   async function advanceToTrading() {
     setAdvanceMsg('Advancing…');
     try {
@@ -349,6 +364,28 @@ export function ManageVault({ address: vaultAddress }: { address: string }) {
           </p>
         )}
       </section>
+
+      {isManager ? (
+        <section className="card border border-red-500/20 p-5">
+          <h2 className="mb-1 font-semibold">Close vault</h2>
+          <p className="mb-3 text-sm opacity-60">
+            Soft-closes the vault (status → Closed) once the fundraise has ended. Investors can still
+            redeem their shares afterwards.
+          </p>
+          <button
+            className="btn btn-ghost text-red-300"
+            disabled={closeAction.isRunning || vault.data.vaultPoolStatus === 3}
+            onClick={() => closeAction.dispatch()}
+          >
+            {vault.data.vaultPoolStatus === 3 ? 'Closed' : closeAction.isRunning ? 'Closing…' : 'Close vault'}
+          </button>
+          {closeAction.error ? (
+            <p className="mt-2 text-xs text-red-400">{String(closeAction.error)}</p>
+          ) : closeAction.data ? (
+            <p className="mt-2 text-xs text-emerald-400">Closed — {shortAddress(String(closeAction.data), 6, 6)}</p>
+          ) : null}
+        </section>
+      ) : null}
     </div>
   );
 }
